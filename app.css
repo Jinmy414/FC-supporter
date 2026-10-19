@@ -42,6 +42,7 @@ button { color: inherit; }
 .topbar-right { display: flex; align-items: center; gap: 11px; }
 .count-pill { border: 1px solid var(--border); border-radius: 30px; padding: 6px 10px; color: #a7b3aa; font-size: 10px; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid transparent; border-radius: 9px; padding: 10px 13px; font-size: 12px; font-weight: 800; cursor: pointer; transition: transform .14s ease, background .14s ease, border-color .14s ease; }
+.button, .button:hover { text-decoration: none; }
 .button:hover { transform: translateY(-1px); }
 .button-primary { background: var(--green); color: #132018; }
 .button-primary:hover { background: #c5fa86; }
@@ -178,6 +179,7 @@ h1, h2, h3, p { margin-top: 0; }
   .results-panel .empty-state { min-height: 230px; }
 }
 @media (max-width: 480px) {
+  .install-shortcut { display: none; }
   .count-pill { display: none; }
   .page-heading { align-items: flex-start; }
   .heading-stat { min-width: auto; }

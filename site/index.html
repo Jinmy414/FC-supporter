@@ -3,86 +3,140 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="下载 FC Supporter 本地规划扩展，离线整理球员数据、规划 SBC 阵容并比较位置评分。">
-  <meta name="theme-color" content="#0e1219">
-  <title>安装 FC Supporter</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="theme-color" content="#101713">
+  <meta name="description" content="FC 27 SBC 阵容求解、阵容构建与球员位置评分。导入自己的球员数据，在浏览器本地规划。">
+  <title>FC Supporter · FC 27 阵容工具</title>
+  <link rel="stylesheet" href="app.css">
 </head>
 <body>
-  <header class="site-header">
-    <a class="site-brand" href="#top" aria-label="FC Supporter 首页"><span class="logo-mark">FC</span><span>FC <b>Supporter</b></span></a>
-    <nav class="site-nav" aria-label="主导航">
-      <a href="#features">功能</a>
-      <a class="current" href="#install">安装</a>
-      <a href="#privacy">隐私</a>
-      <a class="lang" href="#top"><span class="flag">中</span> 中文⌄</a>
-      <a class="repo-link" href="https://github.com/Jinmy414/FC-supporter">GitHub ↗</a>
-    </nav>
-  </header>
-
-  <main id="top" class="page-wrap">
-    <section class="hero">
-      <div class="eyebrow"><span class="pulse"></span> FC SUPPORTER · LOCAL PLANNER</div>
-      <h1>安装 <span>FC Supporter</span></h1>
-      <p>本地规划 SBC 和阵容。导入自己的球员表，即可在浏览器中离线使用。</p>
-    </section>
-
-    <section id="install" class="install-card featured-card">
-      <div class="card-title"><span class="device-icon">▣</span><h2>Chrome / Edge 扩展</h2><span class="tag">推荐</span></div>
-      <div class="card-rule"></div>
-      <ol class="steps">
-        <li><span class="step-index">1</span><div><b>下载 FC Supporter</b><p>获取扩展安装包并解压到本机。</p><a class="download-button" href="downloads/fc-supporter.zip" download><span>↓</span> 下载扩展 ZIP</a><small class="version-note">当前版本 1.0.0 · 仅提供源码包，首次安装需手动加载</small></div></li>
-        <li><span class="step-index">2</span><div><b>在浏览器中打开扩展管理页</b><p>在 Chrome 地址栏输入 <code>chrome://extensions</code>；Edge 用户输入 <code>edge://extensions</code>。</p></div></li>
-        <li><span class="step-index">3</span><div><b>开启开发者模式并加载扩展</b><p>开启右上角的“开发者模式”，点击“加载已解压的扩展程序”，选择解压后的文件夹。</p></div></li>
-        <li><span class="step-index">4</span><div><b>打开 FC Supporter 并导入球员表</b><p>点击浏览器工具栏里的扩展图标，在“球员数据”页导入 CSV 或 JSON。</p></div></li>
-      </ol>
-    </section>
-
-    <section id="features" class="features-section">
-      <div class="section-heading"><div><div class="eyebrow">TOOLS INCLUDED</div><h2>为规划阵容准备的工具</h2></div><a href="https://github.com/Jinmy414/FC-supporter">查看源代码 ↗</a></div>
-      <div class="feature-grid">
-        <article class="feature-card"><span class="feature-icon">▦</span><h3>SBC 阵容规划</h3><p>按球员评分、估算化学反应、预算和俱乐部约束求解，最多批量规划 20 个挑战。</p><span class="feature-foot">使用本地导入数据</span></article>
-        <article class="feature-card"><span class="feature-icon">⇄</span><h3>解后换人</h3><p>保持其他球员不变，查找仍满足当前要求的替代卡，并更新本地方案。</p><span class="feature-foot">每次替换都会重新核对要求</span></article>
-        <article class="feature-card"><span class="feature-icon">◇</span><h3>阵容构建</h3><p>选择阵型、球员来源和预算，比较各位置的估算 Meta 分数。</p><span class="feature-foot">支持多种常见阵型</span></article>
-        <article class="feature-card"><span class="feature-icon">◈</span><h3>位置评分</h3><p>以你导入的 Meta 值或基础属性估算球员角色表现，并按位置筛选。</p><span class="feature-foot">数据可随时导出</span></article>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="FC Supporter 首页">
+        <span class="brand-mark">FC</span>
+        <span><b>FC Supporter</b><small>LOCAL PLANNER</small></span>
+      </a>
+      <nav class="nav" aria-label="主导航">
+        <button class="nav-item active" data-view="sbc"><span class="nav-icon">▦</span>SBC 求解</button>
+        <button class="nav-item" data-view="squad"><span class="nav-icon">◇</span>阵容构建</button>
+        <button class="nav-item" data-view="meta"><span class="nav-icon">◈</span>Meta 评分</button>
+        <button class="nav-item" data-view="players"><span class="nav-icon">▤</span>球员数据</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="local-badge"><span class="status-dot"></span><span><b>本地模式</b><small>数据保存在此浏览器</small></span></div>
+        <p>FC Supporter 是独立的离线规划工具，与 EA 或 fodder.gg 无关。</p>
       </div>
-    </section>
+    </aside>
 
-    <section class="install-options">
-      <h2>安装与使用说明</h2>
-      <details open>
-        <summary><span>本地加载扩展</span><span class="chevron">⌄</span></summary>
-        <div class="details-body">
-          <p>目前通过 ZIP 下载源码包并在浏览器中“加载已解压的扩展程序”安装。无需登录 FC Supporter 账号。</p>
-          <p>如需升级，下载新版本后，在扩展管理页移除旧版，再加载新文件夹。导出的球员 JSON 可用于备份和迁移数据。</p>
-          <a class="inline-link" href="downloads/fc-supporter.zip" download>再次下载扩展 ZIP →</a>
+    <main id="top" class="main-content">
+      <header class="topbar">
+        <div class="breadcrumbs"><span>FC SUPPORTER</span><i>/</i><b id="breadcrumb">SBC 求解</b></div>
+        <div class="topbar-right"><span id="rosterCount" class="count-pill">0 名球员</span><a class="button button-quiet install-shortcut" href="install.html">扩展安装</a><button id="topImport" class="button button-quiet" type="button">导入数据</button></div>
+      </header>
+
+      <section class="view active" id="view-sbc">
+        <div class="page-heading">
+          <div><div class="eyebrow">SQUAD BUILDING CHALLENGES</div><h1>把阵容要求交给求解器</h1><p>按你导入的俱乐部球员和手动录入的市场球员规划阵容。</p></div>
+          <div class="heading-stat"><span class="stat-number" id="sbcPlayerCount">0</span><span>可用球员</span></div>
         </div>
-      </details>
-      <details>
-        <summary><span>导入球员数据</span><span class="chevron">⌄</span></summary>
-        <div class="details-body">
-          <p>球员页面支持 CSV 和 JSON。CSV 模板包含名称、评分、位置、俱乐部、联赛、国家、价格、自有标记和基础属性。市场数据需由你手动整理导入。</p>
-          <p>化学反应与球队评分是本地估算；特殊卡加成和游戏内实时价格可能需要自行核对。</p>
+        <div class="workspace-grid">
+          <section class="panel requirements-panel">
+            <div class="panel-heading"><div><h2>挑战要求</h2><p>支持单个挑战或最多 20 个挑战的 JSON 数组。</p></div><span class="step-number">01</span></div>
+            <label class="field-label" for="requirements">要求 JSON</label>
+            <textarea id="requirements" class="code-input" spellcheck="false">[
+  {
+    "name": "挑战 1",
+    "minRating": 75,
+    "minChemistry": 0,
+    "budget": 0,
+    "maxSameLeague": 11,
+    "maxSameNation": 11,
+    "maxSameClub": 11,
+    "formation": "4-3-3"
+  }
+]</textarea>
+            <div class="field-hint">化学反应和球队评分采用本地估算。预算只计入标记为市场球员的卡片。</div>
+            <div class="divider"></div>
+            <label class="check-row"><input id="includeMarket" type="checkbox" checked><span class="custom-check"></span><span><b>允许使用市场球员</b><small>市场名单和价格需要手动导入</small></span></label>
+            <div class="button-row">
+              <button id="solveBatch" class="button button-primary" type="button"><span>✳</span> 求解挑战组</button>
+              <button id="loadDemo" class="button button-secondary" type="button">载入演示数据</button>
+            </div>
+            <div class="helper-box"><span class="helper-icon">i</span><p>求解结果是阵容规划建议。请在游戏中自行核对特殊球员的化学反应、球员质量和最终要求。</p></div>
+          </section>
+
+          <section class="panel results-panel">
+            <div class="panel-heading"><div><h2>求解结果</h2><p id="resultSummary">运行求解器后，结果会显示在这里。</p></div><span class="step-number">02</span></div>
+            <div id="sbcResults" class="empty-state"><div class="empty-icon">⌘</div><h3>等待挑战要求</h3><p>导入球员数据，然后运行求解器。</p></div>
+          </section>
         </div>
-      </details>
-      <details>
-        <summary><span>浏览器与平台</span><span class="chevron">⌄</span></summary>
-        <div class="details-body">
-          <p>本版本提供 Chrome 和 Edge 的 Manifest V3 安装包。手机浏览器及 Firefox 暂未提供单独安装包。</p>
+        <section id="swapPanel" class="panel swap-panel hidden">
+          <div class="panel-heading"><div><h2>替换一名球员</h2><p>保持其他 10 名球员不变，筛选仍满足要求的替代卡。</p></div><span class="step-number">03</span></div>
+          <div class="swap-controls">
+            <label class="field-wrap"><span class="field-label">挑战</span><select id="swapChallenge" class="select-input"></select></label>
+            <label class="field-wrap"><span class="field-label">替换位置</span><select id="swapSlot" class="select-input"></select></label>
+            <button id="findSwaps" class="button button-secondary" type="button">查找替代球员</button>
+          </div>
+          <div id="swapResults" class="swap-results"></div>
+        </section>
+      </section>
+
+      <section class="view" id="view-squad">
+        <div class="page-heading">
+          <div><div class="eyebrow">SQUAD BUILDER</div><h1>围绕你的战术组建最佳阵容</h1><p>根据阵型位置、角色评分和预算，规划一套十一人阵容。</p></div>
+          <div class="heading-stat"><span class="stat-number">11</span><span>场上位置</span></div>
         </div>
-      </details>
-    </section>
+        <div class="workspace-grid squad-grid">
+          <section class="panel">
+            <div class="panel-heading"><div><h2>阵容设置</h2><p>球员分数来自导入的 Meta 值或基础属性估算。</p></div><span class="step-number">01</span></div>
+            <div class="form-grid">
+              <label class="field-wrap"><span class="field-label">阵型</span><select id="formation" class="select-input"><option value="4-3-3">4-3-3</option><option value="4-2-3-1">4-2-3-1</option><option value="4-4-2">4-4-2</option><option value="4-1-2-1-2">4-1-2-1-2</option></select></label>
+              <label class="field-wrap"><span class="field-label">预算（金币）</span><input id="squadBudget" class="text-input" type="number" min="0" value="0" placeholder="0 = 不限"></label>
+              <label class="field-wrap"><span class="field-label">最低化学反应</span><input id="squadChemistry" class="text-input" type="number" min="0" max="33" value="0"></label>
+              <label class="field-wrap"><span class="field-label">球员来源</span><select id="squadSource" class="select-input"><option value="all">俱乐部 + 市场</option><option value="owned">仅俱乐部</option></select></label>
+            </div>
+            <button id="buildSquad" class="button button-primary full-button" type="button">生成最佳阵容 <span>→</span></button>
+            <div class="helper-box"><span class="helper-icon">i</span><p>此工具仅做阵容规划，不会登录 EA、购买球员或向游戏提交阵容。</p></div>
+          </section>
+          <section class="panel">
+            <div class="panel-heading"><div><h2>最佳十一人</h2><p id="squadSummary">设置阵型并生成阵容。</p></div><span class="step-number">02</span></div>
+            <div id="squadResult" class="empty-state compact-empty"><div class="empty-icon">◇</div><h3>还没有阵容</h3><p>导入数据后即可开始构建。</p></div>
+          </section>
+        </div>
+      </section>
 
-    <section id="privacy" class="privacy-card">
-      <div class="privacy-icon">✓</div>
-      <div><h2>本地运行，数据留在你的浏览器</h2><p>扩展不连接 EA、不读取 EA 登录状态、不访问俱乐部或转会市场，也不会自动买球员或提交 SBC。球员数据仅保存在浏览器本地存储中。</p></div>
-    </section>
+      <section class="view" id="view-meta">
+        <div class="page-heading">
+          <div><div class="eyebrow">ROLE META RATINGS</div><h1>查看球员在各位置的表现</h1><p>根据导入的角色 Meta 值或基础属性估算。</p></div>
+          <div class="heading-stat"><span class="stat-number" id="metaPlayerCount">0</span><span>张球员卡</span></div>
+        </div>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>位置评分</h2><p>选择你关心的位置，比较符合条件的球员。</p></div><span class="step-number">01</span></div>
+          <div class="meta-controls"><label class="field-wrap"><span class="field-label">场上位置</span><select id="metaPosition" class="select-input"><option>GK</option><option>LB</option><option>CB</option><option>RB</option><option>CDM</option><option>CM</option><option>CAM</option><option>LM</option><option>RM</option><option>LW</option><option>RW</option><option>CF</option><option>ST</option></select></label><label class="search-wrap"><span>⌕</span><input id="metaSearch" type="search" placeholder="搜索球员"></label></div>
+          <div id="metaTable" class="table-wrap"></div>
+        </section>
+      </section>
 
-    <section class="fine-print">
-      <p>FC Supporter 是独立的社区工具，与 Electronic Arts 或 fodder.gg 无关。EA 建议避免第三方浏览器扩展，并禁止自动买家和机器人。请查看 <a href="https://help.ea.com/en/articles/ea-sports-fc/fc-rules/">EA SPORTS FC 规则</a>。阵容估算仅供规划参考。</p>
-    </section>
-  </main>
+      <section class="view" id="view-players">
+        <div class="page-heading">
+          <div><div class="eyebrow">PLAYER DATABASE</div><h1>管理你的本地球员数据</h1><p>导入 CSV 或 JSON；数据仅保存在当前浏览器。</p></div>
+          <button id="exportPlayers" class="button button-secondary" type="button">导出 JSON ↓</button>
+        </div>
+        <section class="panel import-panel">
+          <div class="panel-heading"><div><h2>导入球员表</h2><p>支持 CSV 和 JSON。市场球员请设置 `owned=false` 并填写预估价格。</p></div><span class="step-number">01</span></div>
+          <div id="dropZone" class="drop-zone"><div class="upload-icon">↑</div><b>拖放文件到这里</b><span>或</span><label class="button button-secondary file-button">选择文件<input id="playerFile" type="file" accept=".csv,.json,text/csv,application/json"></label><small>字段模板：id, name, rating, positions, price, owned, rarity, league, nation, club, pace, shooting, passing, dribbling, defending, physical, meta, chemBonus</small></div>
+          <div class="import-actions"><button id="downloadTemplate" class="text-button" type="button">下载 CSV 模板</button><button id="clearPlayers" class="text-button text-danger" type="button">清空本地数据</button><span id="importStatus" class="import-status"></span></div>
+        </section>
+        <section class="panel roster-panel">
+          <div class="panel-heading"><div><h2>已导入球员</h2><p id="rosterDescription">还没有导入球员数据。</p></div><button id="rosterDemo" class="button button-quiet" type="button">载入演示数据</button></div>
+          <div id="playerTable" class="table-wrap"></div>
+        </section>
+      </section>
 
-  <footer class="site-footer"><a class="site-brand" href="#top"><span class="logo-mark">FC</span><span>FC <b>Supporter</b></span></a><span>本地规划工具 · 公开源码</span><a href="https://github.com/Jinmy414/FC-supporter">GitHub 仓库 ↗</a></footer>
+      <footer class="footer-note"><span>FC SUPPORTER · FC 27 TOOLS</span><span>独立规划工具 · 数据保存在当前浏览器</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="core.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
