@@ -1,0 +1,2 @@
+# Keep recovered upstream assets byte-for-byte; tests verify their pinned digests.
+vendor/fodder/*.js -whitespace

@@ -3,6 +3,7 @@ import hashlib,json,zipfile
 root=Path(__file__).resolve().parent.parent
 files=['manifest.json','popup.html','popup.css','popup.js','app.html','app.css','app.js','core.js','solver-worker.js','README.md','data/players-template.csv','docs/RELEASE_STATUS.md','docs/SOURCE_RECOVERY.md']
 files += [str(p.relative_to(root)) for p in sorted((root/'fonts').iterdir()) if p.is_file()]
+files += ['native-loader.js','native-bridge.js'] + [str(p.relative_to(root)) for p in sorted((root/'vendor/fodder').iterdir()) if p.is_file()]
 output=root/'site/downloads'; output.mkdir(exist_ok=True)
 archive=output/'fc-supporter.zip'
 with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:

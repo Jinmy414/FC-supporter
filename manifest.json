@@ -1,14 +1,22 @@
 {
   "manifest_version": 3,
   "name": "FC Supporter · 阵容规划",
-  "version": "1.1.0",
-  "description": "本地 FC 球员与 SBC 规划工具。不会连接或修改 EA Web App。",
+  "version": "1.2.0",
+  "description": "EA FC 页面增强客户端恢复版与本地阵容规划器。EA 模式连接原服务并保留原登录与权限检查。",
   "permissions": [
-    "storage"
+    "storage",
+    "identity"
   ],
   "action": {
     "default_title": "打开 FC Supporter",
     "default_popup": "popup.html"
   },
-  "version_name": "1.1.0-beta.1"
+  "version_name": "1.2.0-beta.1",
+  "host_permissions": ["https://fodder.gg/*", "https://solve.fodder.gg/*"],
+  "background": {"service_worker": "vendor/fodder/background.js"},
+  "content_scripts": [
+    {"matches": ["https://www.ea.com/ea-sports-fc/ultimate-team/web-app*", "https://www.ea.com/*/ea-sports-fc/ultimate-team/web-app*"], "js": ["native-bridge.js"], "run_at": "document_start"},
+    {"matches": ["https://www.ea.com/ea-sports-fc/ultimate-team/web-app*", "https://www.ea.com/*/ea-sports-fc/ultimate-team/web-app*"], "js": ["native-loader.js"], "run_at": "document_idle"}
+  ],
+  "web_accessible_resources": [{"resources": ["vendor/fodder/client.js"], "matches": ["https://www.ea.com/*"]}]
 }

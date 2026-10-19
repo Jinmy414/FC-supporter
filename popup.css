@@ -72,3 +72,6 @@ small {
   font-size: 10px;
   line-height: 1.5;
 }
+.native-option{grid-column:1/-1;font-size:11px;color:#c3d2ca;display:flex;align-items:center;gap:8px;line-height:1.5}
+.native-option input{accent-color:#12b886}
+button.secondary{background:#24332d;color:#dceee5;border:1px solid #3b5145}

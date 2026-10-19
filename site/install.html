@@ -72,11 +72,11 @@
           </li>
           <li>
             <div class="step-line"><span class="step-index">3</span>
-              <div>点击浏览器工具栏里的 FC Supporter，打开阵容工具。</div>
+              <div>点击浏览器工具栏里的 FC Supporter，选择“打开 EA FC 增强面板”；也可打开离线规划工具。</div>
             </div>
           </li>
         </ol>
-        <p class="distribution-note">1.1.0 测试版 · 源码安装包 · 尚未上架应用商店</p>
+        <p class="distribution-note">1.2.0 测试版 · 含恢复的 EA 客户端 1.3.9 · 尚未上架应用商店</p>
       </section>
       <section class="other-methods" aria-labelledby="otherTitle">
         <h2 id="otherTitle">其他安装方式</h2>
@@ -198,7 +198,7 @@
           </details>
         </div>
       </section>
-      <p class="install-note">用户脚本目前提供 EA 页面入口，规划工具使用你导入的本地名单。真实 EA 数据同步、购买和提交功能尚未通过验收。<button type="button"
+      <p class="install-note">Chrome 扩展已接入恢复的原 EA 页面客户端，连接原服务并保留原账号和 Gold 权限；真实 EA 功能待验收。其他平台用户脚本目前提供离线规划入口。<button type="button"
           class="text-link" data-dialog="featuresDialog">查看功能进度</button></p>
       <p class="web-alternative">也可以 <a href="app.html">直接使用网页工具 <span aria-hidden="true">›</span></a></p>
     </div>
@@ -209,7 +209,7 @@
   </footer>
   <div class="notice-bar" id="dataNotice">
     <div>
-      <p>球员数据仅保存在你的浏览器中。<button class="text-link" data-dialog="privacyDialog" type="button">隐私说明</button></p><button
+      <p>离线模式本地保存；EA 模式连接原服务。<button class="text-link" data-dialog="privacyDialog" type="button">隐私说明</button></p><button
         class="button button-primary" id="dismissNotice" type="button">知道了</button>
     </div>
   </div>
@@ -218,7 +218,8 @@
       <h2 id="guideTitle">开始使用</h2><button class="close-dialog" type="button" aria-label="关闭指南">×</button>
     </div>
     <ol class="guide-steps">
-      <li>安装扩展或直接打开网页工具。</li>
+      <li>安装扩展后可选择“打开 EA FC 增强面板”，登录 EA 并启用恢复的原客户端。原账号和 Gold 权限由原服务处理。</li>
+      <li>使用离线模式时，直接打开网页工具或扩展内的离线规划工具。</li>
       <li>在“球员数据”中导入 CSV / JSON，也可以先载入演示名单。</li>
       <li>设置 SBC 要求、阵型和预算，生成阵容规划。</li>
       <li>导出名单备份。网页版和扩展版的数据分别保存在各自浏览器空间中。</li>
@@ -228,21 +229,23 @@
     <div class="dialog-heading">
       <h2 id="featuresTitle">功能进度</h2><button class="close-dialog" type="button" aria-label="关闭功能进度">×</button>
     </div>
-    <p class="dialog-intro">当前为独立功能测试版。以下状态对应本项目的实际能力。</p>
+    <p class="dialog-intro">扩展提供恢复的原 EA 客户端和离线规划两种模式。原客户端连接 fodder.gg 服务；原服务端尚未独立恢复。</p>
     <ul class="feature-status">
       <li><span>SBC 单个 / 整组规划</span><b>本地名单</b></li>
       <li><span>市场球员与预算</span><b>导入估价</b></li>
       <li><span>解后换人</span><b>本地方案</b></li>
       <li><span>阵容生成器 / 活动阵容</span><b>本地规划</b></li>
       <li><span>位置 Meta 评分</span><b>属性估算</b></li>
-      <li><span>EA 俱乐部同步 / 实时交易</span><em>待真实验收</em></li>
+      <li><span>原 EA 客户端界面与流程</span><b>已接入扩展</b></li>
+      <li><span>EA 俱乐部同步 / 交易 / SBC 提交</span><em>待真实验收</em></li>
     </ul><a class="button button-primary" href="app.html">体验规划工具</a>
   </dialog>
   <dialog id="privacyDialog" aria-labelledby="privacyTitle">
     <div class="dialog-heading">
       <h2 id="privacyTitle">隐私说明</h2><button class="close-dialog" type="button" aria-label="关闭隐私说明">×</button>
     </div>
-    <p>FC Supporter 将导入的球员数据保存在当前浏览器的本地存储中，不上传名单，不收集 EA 密码。</p>
+    <p>离线规划工具将导入的球员数据保存在当前浏览器的本地存储中，不上传名单。</p>
+    <p>启用 EA 增强模式后，恢复的原客户端会读取 EA 页面中的功能数据，并向 fodder.gg 与 solve.fodder.gg 发送功能所需请求。其账号登录、Gold 权限和服务端数据处理仍由原服务提供；本项目未独立重建这些服务。</p>
     <p>用户脚本仅添加工具入口。点击入口会打开本项目网页，不读取 EA 页面中的账号或俱乐部数据。</p>
     <p>你可以在“球员数据”页导出备份或清空数据。清除浏览器站点数据也会删除本地名单。</p>
   </dialog>

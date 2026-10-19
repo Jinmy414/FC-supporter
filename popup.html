@@ -13,10 +13,12 @@
     <div class="brand-mark">FC</div>
     <div>
       <h1>FC Supporter</h1>
-      <p>本地阵容与 SBC 规划器</p>
+      <p>EA 页面增强与本地规划</p>
     </div>
-    <button id="openApp" type="button">打开工具 <span>↗</span></button>
-    <small>你的数据只保存在本机；此扩展不会访问 EA 页面。</small>
+    <button id="openEA" type="button">打开 EA FC 增强面板 <span>↗</span></button>
+    <label class="native-option"><input id="nativeEnabled" type="checkbox">在 EA 页面启用恢复的原客户端</label>
+    <button id="openApp" type="button" class="secondary">打开离线规划工具 <span>↗</span></button>
+    <small id="nativeStatus">EA 模式连接 fodder.gg 原服务，保留原账号与 Gold 权限；离线规划工具使用本地名单。</small>
   </main>
   <script src="popup.js"></script>
 </body>
