@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "FC Supporter · Local Planner",
+  "version": "1.0.0",
+  "description": "本地 FC 球员与 SBC 规划工具。不会连接或修改 EA Web App。",
+  "permissions": ["storage"],
+  "action": {
+    "default_title": "打开 FC Supporter",
+    "default_popup": "popup.html"
+  }
+}
