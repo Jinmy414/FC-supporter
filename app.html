@@ -17,6 +17,7 @@
       <nav class="nav" aria-label="主导航">
         <button class="nav-item active" data-view="sbc"><span class="nav-icon">▦</span>SBC 求解</button>
         <button class="nav-item" data-view="squad"><span class="nav-icon">◇</span>阵容构建</button>
+        <button class="nav-item" data-view="events"><span class="nav-icon">✦</span>活动阵容</button>
         <button class="nav-item" data-view="meta"><span class="nav-icon">◈</span>Meta 评分</button>
         <button class="nav-item" data-view="players"><span class="nav-icon">▤</span>球员数据</button>
       </nav>
@@ -99,6 +100,39 @@
           <section class="panel">
             <div class="panel-heading"><div><h2>最佳十一人</h2><p id="squadSummary">设置阵型并生成阵容。</p></div><span class="step-number">02</span></div>
             <div id="squadResult" class="empty-state compact-empty"><div class="empty-icon">◇</div><h3>还没有阵容</h3><p>导入数据后即可开始构建。</p></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-events">
+        <div class="page-heading">
+          <div><div class="eyebrow">GAUNTLET & LIVE EVENTS</div><h1>为活动要求规划阵容</h1><p>录入 Gauntlet 或实时活动限制，求解一套符合条件的十一人阵容。</p></div>
+          <div class="heading-stat"><span class="stat-number">11</span><span>球员位置</span></div>
+        </div>
+        <div class="workspace-grid squad-grid">
+          <section class="panel">
+            <div class="panel-heading"><div><h2>活动规则</h2><p>球员和估价来自你导入的本地名单。</p></div><span class="step-number">01</span></div>
+            <div class="form-grid">
+              <label class="field-wrap"><span class="field-label">活动类型</span><select id="eventType" class="select-input"><option>Gauntlet</option><option>实时活动</option><option>自定义挑战</option></select></label>
+              <label class="field-wrap"><span class="field-label">阵型</span><select id="eventFormation" class="select-input"><option value="4-3-3">4-3-3</option><option value="4-2-3-1">4-2-3-1</option><option value="4-4-2">4-4-2</option><option value="4-1-2-1-2">4-1-2-1-2</option></select></label>
+              <label class="field-wrap"><span class="field-label">最低球队评分</span><input id="eventMinRating" class="text-input" type="number" min="0" max="99" value="0"></label>
+              <label class="field-wrap"><span class="field-label">最低化学反应</span><input id="eventMinChemistry" class="text-input" type="number" min="0" max="33" value="0"></label>
+              <label class="field-wrap"><span class="field-label">市场预算（金币）</span><input id="eventBudget" class="text-input" type="number" min="0" value="0" placeholder="0 = 不限"></label>
+              <label class="field-wrap"><span class="field-label">同俱乐部最多</span><input id="eventMaxSameClub" class="text-input" type="number" min="1" max="11" value="11"></label>
+              <label class="field-wrap"><span class="field-label">同联赛最多</span><input id="eventMaxSameLeague" class="text-input" type="number" min="1" max="11" value="11"></label>
+              <label class="field-wrap"><span class="field-label">同国家最多</span><input id="eventMaxSameNation" class="text-input" type="number" min="1" max="11" value="11"></label>
+              <label class="field-wrap"><span class="field-label">不同俱乐部至少</span><input id="eventMinUniqueClubs" class="text-input" type="number" min="0" max="11" value="0"></label>
+              <label class="field-wrap"><span class="field-label">不同联赛至少</span><input id="eventMinUniqueLeagues" class="text-input" type="number" min="0" max="11" value="0"></label>
+              <label class="field-wrap"><span class="field-label">不同国家至少</span><input id="eventMinUniqueNations" class="text-input" type="number" min="0" max="11" value="0"></label>
+              <label class="field-wrap"><span class="field-label">球员品质</span><select id="eventQuality" class="select-input"><option value="any">不限</option><option value="bronze">铜卡</option><option value="silver">银卡</option><option value="gold">金卡</option></select></label>
+            </div>
+            <label class="check-row event-market-option"><input id="eventIncludeMarket" type="checkbox" checked><span class="custom-check"></span><span><b>允许使用市场球员</b><small>使用本地名单和你填写的预估价格</small></span></label>
+            <button id="buildEventSquad" class="button button-primary full-button" type="button">生成活动阵容 <span>→</span></button>
+            <div class="helper-box"><span class="helper-icon">i</span><p>本地求解结果供你参考。请在游戏内核对活动规则、化学反应和球员资格。</p></div>
+          </section>
+          <section class="panel">
+            <div class="panel-heading"><div><h2>活动阵容方案</h2><p id="eventSummary">录入活动规则后生成阵容。</p></div><span class="step-number">02</span></div>
+            <div id="eventResult" class="empty-state compact-empty"><div class="empty-icon">✦</div><h3>等待活动要求</h3><p>导入球员数据，然后设置活动限制。</p></div>
           </section>
         </div>
       </section>

@@ -2,7 +2,7 @@
   "use strict";
 
   const Core = window.FCSupporterCore;
-  const state = { players: [], results: [], swapChoices: [], squadResult: null, toastTimer: null };
+  const state = { players: [], results: [], swapChoices: [], squadResult: null, eventResult: null, toastTimer: null };
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
   const storage = globalThis.chrome?.storage?.local;
@@ -168,6 +168,38 @@
     $("#squadSummary").textContent = `Meta 合计 ${result.score.toFixed(1)} · 估算费用 ${result.evaluation.cost.toLocaleString()} 金币`;
   }
 
+  function runEventBuilder() {
+    if (!state.players.length) { toast("请先导入球员数据，或载入演示数据。", true); return; }
+    const requirement = {
+      name: `${$("#eventType").value} · 活动阵容`,
+      formation: $("#eventFormation").value,
+      minRating: Number($("#eventMinRating").value) || 0,
+      minChemistry: Number($("#eventMinChemistry").value) || 0,
+      budget: Number($("#eventBudget").value) || 0,
+      maxSameClub: Number($("#eventMaxSameClub").value) || 11,
+      maxSameLeague: Number($("#eventMaxSameLeague").value) || 11,
+      maxSameNation: Number($("#eventMaxSameNation").value) || 11,
+      minUniqueClubs: Number($("#eventMinUniqueClubs").value) || 0,
+      minUniqueLeagues: Number($("#eventMinUniqueLeagues").value) || 0,
+      minUniqueNations: Number($("#eventMinUniqueNations").value) || 0,
+      quality: $("#eventQuality").value
+    };
+    const result = Core.buildSquad(state.players, { ...requirement, includeMarket: $("#eventIncludeMarket").checked });
+    state.eventResult = { ...result, requirement, squad: result.squad?.map(item => item.player) || null };
+    const target = $("#eventResult");
+    if (!result.squad) {
+      target.className = "results-list";
+      target.innerHTML = resultCard(state.eventResult, 0);
+      $("#eventSummary").textContent = "当前球员数据中没有可行方案。";
+      toast(result.reason || "没有找到符合条件的阵容。", true);
+      return;
+    }
+    target.className = "results-list";
+    target.innerHTML = resultCard(state.eventResult, 0);
+    $("#eventSummary").textContent = `估算评分 ${result.evaluation.rating} · 化学 ${result.evaluation.chemistry} · 市场估价 ${result.evaluation.cost.toLocaleString()} 金币`;
+    toast("已生成活动阵容规划。");
+  }
+
   function renderAll() {
     const count = state.players.length;
     $("#rosterCount").textContent = `${count} 名球员`;
@@ -182,7 +214,7 @@
   function activateView(name) {
     $$(".nav-item").forEach(button => button.classList.toggle("active", button.dataset.view === name));
     $$(".view").forEach(view => view.classList.toggle("active", view.id === `view-${name}`));
-    const label = ({ sbc: "SBC 求解", squad: "阵容构建", meta: "Meta 评分", players: "球员数据" })[name] || "FC Supporter";
+    const label = ({ sbc: "SBC 求解", squad: "阵容构建", events: "活动阵容", meta: "Meta 评分", players: "球员数据" })[name] || "FC Supporter";
     $("#breadcrumb").textContent = label;
   }
 
@@ -323,6 +355,7 @@
     $("#loadDemo").addEventListener("click", async () => { state.players = makeDemoPlayers(); await savePlayers(); toast("演示球员数据已载入。"); });
     $("#rosterDemo").addEventListener("click", async () => { state.players = makeDemoPlayers(); await savePlayers(); toast("演示球员数据已载入。"); });
     $("#buildSquad").addEventListener("click", runSquadBuilder);
+    $("#buildEventSquad").addEventListener("click", runEventBuilder);
     $("#metaPosition").addEventListener("change", renderMetaTable);
     $("#metaSearch").addEventListener("input", renderMetaTable);
     $("#swapChallenge").addEventListener("change", fillSwapSlots);

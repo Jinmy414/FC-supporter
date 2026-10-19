@@ -392,7 +392,8 @@
   function buildSquad(players, options = {}) {
     const formation = formationPositions(options.formation);
     const marketAllowed = options.includeMarket !== false;
-    const pool = players.filter(player => player.owned || marketAllowed);
+    let pool = players.filter(player => player.owned || marketAllowed);
+    if (options.quality && options.quality !== "any") pool = pool.filter(player => itemQuality(player) === String(options.quality).toLowerCase());
     if (pool.length < 11) return { squad: null, reason: "可用球员少于 11 名。", nodes: 0 };
     const budget = asNumber(options.budget);
     const minChemistry = asNumber(options.minChemistry);
@@ -403,6 +404,18 @@
       for (const candidate of ordered.slice(0, 35)) selected.set(candidate.player.id, candidate);
       const cheapest = [...ordered].sort((a, b) => (a.player.owned ? 0 : a.player.price) - (b.player.owned ? 0 : b.player.price)).slice(0, 8);
       for (const candidate of cheapest) selected.set(candidate.player.id, candidate);
+      for (const [field, key] of [["club", "minUniqueClubs"], ["league", "minUniqueLeagues"], ["nation", "minUniqueNations"]]) {
+        const neededGroups = asNumber(options[key]);
+        if (!neededGroups) continue;
+        const bestByGroup = new Map();
+        for (const candidate of ordered) {
+          const group = String(candidate.player[field] ?? "").trim();
+          if (group && !bestByGroup.has(group)) bestByGroup.set(group, candidate);
+        }
+        for (const candidate of [...bestByGroup.values()].slice(0, Math.min(24, neededGroups * 2))) {
+          selected.set(candidate.player.id, candidate);
+        }
+      }
       return [...selected.values()].sort((a, b) => (b.score + (b.fit ? 0 : -16)) - (a.score + (a.fit ? 0 : -16)));
     });
     const selected = [];
@@ -416,7 +429,7 @@
       nodes += 1;
       if (nodes >= maxNodes || Date.now() > deadline) { stopped = true; return; }
       if (slot === formation.length) {
-        const evaluation = evaluateSquad(selected.map(item => item.player), { formation, budget, minChemistry });
+        const evaluation = evaluateSquad(selected.map(item => item.player), { ...options, formation, budget, minChemistry });
         if (!evaluation.valid) return;
         const totalScore = score + evaluation.chemistry * .15;
         if (!best || totalScore > best.score) best = { squad: selected.slice(), evaluation, score: totalScore };
@@ -428,6 +441,7 @@
       for (const candidate of list) {
         const player = candidate.player;
         if (selected.some(item => item.player.id === player.id)) continue;
+        if (!canAdd(player, selected.map(item => item.player), options)) continue;
         const nextCost = cost + (player.owned ? 0 : player.price);
         if (budget > 0 && nextCost > budget) continue;
         const positionScore = candidate.score + (candidate.fit ? 0 : -16);
