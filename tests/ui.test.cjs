@@ -61,6 +61,19 @@ test('invalid requirement JSON is surfaced without replacing the current result'
  const result=e.$('#sbcResults').innerHTML;e.$('#useJson').click();e.$('#requirements').value='{bad json';e.$('#solveBatch').click();
  assert.match(e.$('#toast').textContent,/JSON/);assert.equal(e.$('#sbcResults').innerHTML,result);
 });
+test('batch unique-group constraints run through the UI and reject contradictory limits',async t=>{
+ const e=await app(t);
+ const positions=['GK','LB','CB','CB','RB','CM','CM','CM','LW','ST','RW'];
+ const players=positions.map((position,i)=>({id:`u${i}`,name:`Unique ${i}`,rating:80,positions:[position],club:'one',league:'one',nation:'one',owned:true}));
+ await importText(e,JSON.stringify(players));
+ e.$('#useJson').click();e.$('#requirements').value='[{"maxUniqueLeagues":1,"maxUniqueNations":1,"maxUniqueClubs":1}]';
+ e.$('#solveBatch').click();await until(()=>e.$('#sbcResults .player-row'));
+ assert.equal(e.$('#sbcResults').querySelectorAll('.player-row').length,11);
+ const previous=e.$('#sbcResults').innerHTML;
+ e.$('#requirements').value='[{"minUniqueLeagues":3,"maxUniqueLeagues":2}]';e.$('#solveBatch').click();
+ assert.match(e.$('#toast').textContent,/不能大于/);assert.equal(e.$('#sbcResults').innerHTML,previous);
+ assert.equal(e.errors.length,0);
+});
 test('squad builder respects eligible positions and renders a pitch',async t=>{
  const e=await app(t);await demo(e);e.$('[data-view="squad"]').click();e.$('#buildSquad').click();
  await until(()=>e.$('#squadResult .formation-player'));assert.equal(e.$('#squadResult').querySelectorAll('.formation-player').length,11);assert.match(e.$('#squadSummary').textContent,/Meta/);

@@ -10,6 +10,8 @@ FC 阵容规划工具与安装站点，当前为 **1.1.0-beta.1**。仍有真实
 
 导入 CSV/JSON 球员名单后，可在浏览器本地使用：单个 SBC 规划、最多 20 个挑战的批量规划、市场估价与预算、解后换人、阵容生成器、活动阵容及按位置的 Meta 估算。扩展、网页版分别在自身浏览器存储中保存名单，不自动共享数据。修改球员名单会清除旧规划，避免继续使用失效结果。
 
+批量 JSON 支持 `minUniqueLeagues`、`minUniqueNations`、`minUniqueClubs`（0–11）和 `maxUniqueLeagues`、`maxUniqueNations`、`maxUniqueClubs`（1–11）。例如 `{"minUniqueLeagues": 2, "maxUniqueLeagues": 3}` 要求来自 2–3 个联赛。最小值大于最大值会直接报错；指定上限时缺失对应分组数据不会被当作满足条件。
+
 Chrome/Edge 扩展 ZIP 可以通过开发者模式加载。另提供可用于 Chrome/Edge、Firefox、iOS Safari Userscripts、Android Firefox 的用户脚本。**当前用户脚本仅在 EA 页面添加规划工具入口**；它没有同步 EA 俱乐部、购买球员或提交 SBC 的能力。
 
 ## 数据与计算范围

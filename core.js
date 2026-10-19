@@ -296,6 +296,9 @@
       minUniqueClubs: [0, 11],
       minUniqueLeagues: [0, 11],
       minUniqueNations: [0, 11],
+      maxUniqueClubs: [1, 11],
+      maxUniqueLeagues: [1, 11],
+      maxUniqueNations: [1, 11],
       nodeLimit: [1, 80000]
     };
     const allowed = new Set([...Object.keys(ranges), "name", "formation", "quality", "includeMarket"]);
@@ -306,6 +309,11 @@
         const number = Number(value[key]);
         if (value[key] == null || value[key] === "" || !Number.isFinite(number) || number < min || number > max || !
           Number.isInteger(number)) throw new Error(`${key} 需要是 ${min} 到 ${max} 之间的整数。`);
+      }
+    }
+    for (const group of ['Clubs', 'Leagues', 'Nations']) {
+      if (asNumber(value[`minUnique${group}`]) > asNumber(value[`maxUnique${group}`], 11)) {
+        throw new Error(`minUnique${group} 不能大于 maxUnique${group}。`);
       }
     }
     if (value.formation !== undefined) formationPositions(value.formation);
@@ -519,6 +527,12 @@
     for (const [field, key, label] of uniqueChecks) {
       const min = asNumber(requirement[key]);
       if (min > 0 && groupCounts(players, field).size < min) errors.push(`不同${label}数量不足 ${min} 个。`);
+      const maxKey = key.replace('minUnique', 'maxUnique');
+      const max = asNumber(requirement[maxKey], 11);
+      if (max < 11 && players.some(player => !String(player[field] || '').trim())) {
+        errors.push(`无法核对 ${maxKey}：部分球员缺少 ${field} 数据。`);
+      }
+      if (groupCounts(players, field).size > max) errors.push(`不同${label}数量超过 ${max} 个。`);
     }
     return {
       valid: errors.length === 0,
@@ -547,6 +561,14 @@
   }
 
   function canAdd(player, chosen, requirement) {
+    for (const [field, key] of [['club', 'maxUniqueClubs'], ['league', 'maxUniqueLeagues'], ['nation', 'maxUniqueNations']]) {
+      const max = asNumber(requirement[key], 11);
+      if (max >= 11) continue;
+      const value = String(player[field] || '').trim();
+      if (!value) return false;
+      const counts = groupCounts(chosen, field);
+      if (!counts.has(value) && counts.size >= max) return false;
+    }
     const limits = [
       ["league", "maxSameLeague"],
       ["nation", "maxSameNation"],

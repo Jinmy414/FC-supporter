@@ -106,3 +106,44 @@ test('a role-specific Meta value is not reused for another role',()=>{
 test('a same-club maximum cannot pass when club data is missing',()=>{
  const s=squad();s[0].club='';assert.equal(C.evaluateSquad(s,{maxSameClub:2}).valid,false);
 });
+
+test('unique group upper bounds reject excess groups and accept exact boundaries', () => {
+  for (const [field, key] of [['club','maxUniqueClubs'],['league','maxUniqueLeagues'],['nation','maxUniqueNations']]) {
+    const s = squad();
+    s.forEach((p,i) => {p[field] = `g${i%2}`;});
+    assert.equal(C.evaluateSquad(s,{[key]:2}).valid,true,key);
+    assert.equal(C.evaluateSquad(s,{[key]:1}).valid,false,key);
+    s[0][field]='';
+    assert.equal(C.evaluateSquad(s,{[key]:2}).valid,false,`${key}: missing metadata`);
+  }
+});
+
+test('contradictory and invalid unique limits fail before search', () => {
+  for (const group of ['Clubs','Leagues','Nations']) {
+    for (const limit of [0,12,1.5,null,'']) {
+      assert.throws(() => C.validateRequirement({[`maxUnique${group}`]:limit}));
+    }
+    assert.throws(() => C.validateRequirement({[`minUnique${group}`]:3,[`maxUnique${group}`]:2}),/不能大于/);
+  }
+});
+
+test('unique maximum solver agrees with exhaustive small-pool feasibility', () => {
+  for (let seed=0;seed<8;seed++) {
+    const pool = Array.from({length:12},(_,i)=>player(i,{club:`g${(i+seed)%3}`,rating:70+i}));
+    const req = {maxUniqueClubs:seed%2?2:3,minRating:75};
+    const feasible = pool.some((_,omit)=>C.evaluateSquad(pool.filter((_,i)=>i!==omit),req).valid);
+    const result = C.solveSquad(pool,req);
+    assert.equal(!!result.squad,feasible,`seed ${seed}`);
+  }
+});
+
+test('solver chooses a feasible group and swap preserves unique maximum', () => {
+  const pool = squad({club:'one'});
+  const alternative = player(11,{club:'other',rating:80});
+  const req={maxUniqueClubs:1};
+  const result=C.solveSquad([...pool,alternative],req);
+  assert.ok(result.squad);
+  assert.equal(new Set(result.squad.map(p=>p.club)).size,1);
+  const choices=C.findSwaps([...pool,alternative],pool,0,req);
+  assert.ok(choices.every(item=>item.player.club==='one'));
+});

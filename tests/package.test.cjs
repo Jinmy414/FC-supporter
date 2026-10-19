@@ -14,5 +14,6 @@ test('extension ZIP contains worker, fonts and licenses and excludes recovered v
 });
 test('generated script mirrors are identical and main page is the installer',()=>{
  for(const file of ['core.js','app.js','app.css','solver-worker.js'])assert.equal(fs.readFileSync(file,'utf8'),fs.readFileSync('site/'+file,'utf8'));
+ assert.equal(fs.readFileSync('site/app.html','utf8'),fs.readFileSync('app.html','utf8').replaceAll('href="https://jinmy414.github.io/FC-supporter/"','href="./"'));
  assert.match(fs.readFileSync('site/index.html','utf8'),/其他安装方式/);assert.match(fs.readFileSync('site/app.html','utf8'),/id="view-sbc"/);
 });

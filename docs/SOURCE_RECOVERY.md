@@ -15,4 +15,4 @@
 
 当前发布客户端没有 sourceMappingURL，因此原始模块、变量名和注释未完全恢复。客户端请求 `/solve`、`/api/solve-streamlined` 等后端；未取得服务端实现或数据库。未执行恢复的客户端、修改其授权判断或测试生产业务写入。
 
-后续静态分析见 [后端恢复记录](BACKEND_RECOVERY.md) 和 [61 个后端请求调用点](backend-call-sites.json)。其中当前 SBC 路径为 `/v1/solves`；保留的旧 `/solve` 字符串不代表当前仍在使用该接口。新增报告独立于原恢复 ZIP，原归档及校验值保持原样。
+后续静态分析见 [后端恢复记录](https://github.com/Jinmy414/FC-supporter/blob/main/docs/BACKEND_RECOVERY.md) 和 [61 个后端请求调用点](https://github.com/Jinmy414/FC-supporter/blob/main/docs/backend-call-sites.json)。其中当前 SBC 路径为 `/v1/solves`；保留的旧 `/solve` 字符串不代表当前仍在使用该接口。新增报告独立于原恢复 ZIP，原归档及校验值保持原样。
