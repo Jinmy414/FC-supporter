@@ -586,7 +586,7 @@
     return players.reduce((sum, player) => sum + (player.owned ? 0 : asNumber(player.price)), 0);
   }
 
-  function solveSquad(players, requirement = {}, includeMarket = true, usedIds = new Set()) {
+  function solveSquad(players, requirement = {}, includeMarket = true, usedIds = new Set(), search = {}) {
     validateRequirement(requirement);
     const pool = candidatePool(players, requirement, includeMarket, usedIds);
     const poolReduced = pool.length < players.filter(player => !usedIds.has(player.id) && (player.owned ||
@@ -599,7 +599,7 @@
       reason: "可用球员少于 11 名。"
     };
     const limit = Math.min(80000, asNumber(requirement.nodeLimit, 50000));
-    const deadline = Date.now() + 1250;
+    const deadline = Math.min(Date.now() + 1250, search.deadline ?? Infinity);
     const selected = [];
     let best = null;
     let nodes = 0;
@@ -630,6 +630,7 @@
           evaluation,
           objective
         };
+        if (search.firstFeasible) stopped = true;
         return;
       }
       if (pool.length - start < needed) return;
@@ -661,7 +662,8 @@
       evaluation: null,
       nodes,
       approximate: stopped || poolReduced,
-      reason: stopped ? "搜索达到时间或计算上限，未找到符合条件的阵容。" : "没有找到满足全部条件的阵容。"
+      reason: stopped ? "搜索达到时间或计算上限，未找到符合条件的阵容。" : poolReduced ?
+        "当前候选范围内未找到阵容；部分球员尚未搜索，不能判定无解。" : "没有找到满足全部条件的阵容。"
     };
   }
 
@@ -669,32 +671,65 @@
     const list = Array.isArray(requirements) ? requirements : [requirements];
     if (!list.length || list.length > 20) throw new Error("挑战数需要在 1 到 20 之间。");
     list.forEach(validateRequirement);
-    // Greedy group planning: constrained squads first. This is not a global optimality proof.
+    // Bounded joint search: later failures can release and reassign earlier squads.
     const order = list.map((requirement, index) => ({
       requirement,
       index
     })).sort((a, b) => asNumber(b.requirement.minRating) - asNumber(a.requirement.minRating) || asNumber(b
       .requirement.minChemistry) - asNumber(a.requirement.minChemistry));
-    const used = new Set();
-    const results = Array(list.length);
-    order.forEach(({
-      requirement,
-      index
-    }, done) => {
-      const solved = solveSquad(players, requirement, includeMarket, used);
-      if (solved.squad)
-        for (const player of solved.squad) used.add(player.id);
-      results[index] = {
-        requirement,
-        ...solved,
-        groupApproximate: list.length > 1
-      };
-      onProgress({
-        done: done + 1,
-        total: list.length
-      });
-    });
-    return results;
+    const deadline = Date.now() + (list.length > 1 ? 4000 : 1250);
+    const maxCalls = list.length > 1 ? 60 : 1;
+    let calls = 0, best = [], bestCount = -1, progress = 0;
+    const keep = plan => {
+      const count = plan.filter(result => result?.squad).length;
+      if (count > bestCount || count === bestCount && plan.filter(Boolean).length > best.filter(Boolean).length) {
+        best = plan.slice(); bestCount = count;
+      }
+    };
+    function visit(depth, used, plan) {
+      keep(plan);
+      if (depth === order.length) return plan.every(result => result?.squad);
+      if (calls >= maxCalls || Date.now() >= deadline) return false;
+      const {requirement, index} = order[depth];
+      const queue = [new Set()], visitedSquads = new Set(), visitedExclusions = new Set(['']);
+      for (let attempt = 0; queue.length && attempt < 12 && calls < maxCalls && Date.now() < deadline; attempt++) {
+        const excluded = queue.shift();
+        calls++;
+        const solved = solveSquad(players, requirement, includeMarket, new Set([...used, ...excluded]), {
+          deadline, firstFeasible: list.length > 1
+        });
+        const next = plan.slice();
+        next[index] = {requirement, ...solved, groupApproximate: list.length > 1};
+        progress = Math.max(progress, depth + 1);
+        onProgress({done: progress, total: list.length});
+        if (!solved.squad) {
+          // A failed alternative must not overwrite a more complete allocation.
+          if (attempt === 0) visit(depth + 1, used, next);
+          continue;
+        }
+        const key = JSON.stringify(solved.squad.map(player => player.id).sort());
+        if (visitedSquads.has(key)) continue;
+        visitedSquads.add(key);
+        const reserved = new Set([...used, ...solved.squad.map(player => player.id)]);
+        if (visit(depth + 1, reserved, next)) return true;
+        // Every distinct alternative must omit at least one card of this squad.
+        for (const player of solved.squad) {
+          const omit = new Set([...excluded, player.id]);
+          const signature = JSON.stringify([...omit].sort());
+          if (!visitedExclusions.has(signature)) {visitedExclusions.add(signature);queue.push(omit);}
+        }
+      }
+      return false;
+    }
+    const complete = visit(0, new Set(), []);
+    return list.map((requirement,index) => best[index] || {
+      requirement, squad: null, evaluation: null, nodes: 0, approximate: true,
+      groupApproximate: list.length > 1,
+      reason: '整组搜索达到计算上限，尚未完成此挑战；不能判定无解。'
+    }).map(result => !complete && list.length > 1 && !result.squad ? {
+      ...result, approximate: true,
+      reason: '当前球员分配下未找到阵容；整组回溯未找到全部挑战的可行分配，不能判定整组无解。'
+    } : result);
   }
 
   function findSwaps(players, squad, slot, requirement, includeMarket = true, count = 5, excludedIds = new Set()) {
@@ -829,7 +864,8 @@
     visit(0, 0, 0);
     if (!best) return {
       squad: null,
-      reason: stopped ? "搜索达到计算上限，未找到符合预算和化学反应要求的阵容。" : "没有找到满足预算和化学反应要求的阵容。",
+      reason: stopped ? "搜索达到计算上限，未找到符合预算和化学反应要求的阵容。" : poolReduced ?
+        "当前候选范围内未找到阵容；部分球员尚未搜索，不能判定无解。" : "没有找到满足预算和化学反应要求的阵容。",
       nodes,
       approximate: stopped || poolReduced
     };

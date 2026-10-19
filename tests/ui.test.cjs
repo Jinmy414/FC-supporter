@@ -74,6 +74,16 @@ test('batch unique-group constraints run through the UI and reject contradictory
  assert.match(e.$('#toast').textContent,/不能大于/);assert.equal(e.$('#sbcResults').innerHTML,previous);
  assert.equal(e.errors.length,0);
 });
+test('batch UI renders both challenges after reallocating earlier cards',async t=>{
+ const e=await app(t);
+ const players=Array.from({length:22},(_,i)=>({id:`joint-${i}`,name:`Joint ${i}`,rating:80,positions:['CM'],club:i<9||i===11||i===12?'common':`unique-${i}`,owned:true}));
+ await importText(e,JSON.stringify(players));
+ e.$('#useJson').click();e.$('#requirements').value='[{"name":"先规划","minRating":80},{"name":"俱乐部分散","minUniqueClubs":11}]';
+ e.$('#solveBatch').click();await until(()=>e.$('#sbcResults').querySelectorAll('.player-row').length===22);
+ assert.equal(e.$('#sbcResults').querySelectorAll('.squad-card').length,2);
+ assert.match(e.$('#sbcResults').textContent,/俱乐部分散/);
+ assert.equal(e.$('#solveBatch').disabled,false);assert.equal(e.errors.length,0);
+});
 test('squad builder respects eligible positions and renders a pitch',async t=>{
  const e=await app(t);await demo(e);e.$('[data-view="squad"]').click();e.$('#buildSquad').click();
  await until(()=>e.$('#squadResult .formation-player'));assert.equal(e.$('#squadResult').querySelectorAll('.formation-player').length,11);assert.match(e.$('#squadSummary').textContent,/Meta/);

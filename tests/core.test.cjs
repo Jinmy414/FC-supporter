@@ -147,3 +147,35 @@ test('solver chooses a feasible group and swap preserves unique maximum', () => 
   const choices=C.findSwaps([...pool,alternative],pool,0,req);
   assert.ok(choices.every(item=>item.player.club==='one'));
 });
+
+test('batch backtracks an earlier squad to free distinct clubs for a later challenge', () => {
+  const pool=Array.from({length:22},(_,i)=>player(i,{rating:80,club:i<9||i===11||i===12?'common':`unique-${i}`}));
+  const req=[{name:'first',minRating:80},{name:'diverse',minUniqueClubs:11}];
+  const greedy=C.solveSquad(pool,req[0]);
+  const reserved=new Set(greedy.squad.map(p=>p.id));
+  assert.equal(C.solveSquad(pool,req[1],true,reserved).squad,null,'fixture must fail with the original greedy allocation');
+  const results=C.solveBatch(pool,req);
+  assert.equal(results.length,2);
+  assert.ok(results.every(result=>result.squad&&result.evaluation.valid));
+  const ids=results.flatMap(result=>result.squad.map(p=>p.id));
+  assert.equal(new Set(ids).size,22);
+  assert.equal(new Set(results[1].squad.map(p=>p.club)).size,11);
+  assert.deepEqual(Array.from(results,r=>r.requirement.name),['first','diverse']);
+});
+
+test('partial batch preserves successful allocations without duplicate cards or false impossibility claims', () => {
+  const req=[{minRating:99},{minRating:80},{minRating:80}];
+  const results=C.solveBatch(squad(),req);
+  assert.equal(results.filter(result=>result.squad).length,1);
+  for(const result of results.filter(result=>!result.squad)) {
+    assert.equal(result.approximate,true);
+    assert.match(result.reason,/不能判定整组无解/);
+  }
+});
+
+test('joint search reports monotonic progress in the original challenge count', () => {
+  const progress=[];
+  C.solveBatch(squad(),[{minRating:99},{minRating:80}],true,event=>progress.push(event));
+  assert.ok(progress.length);
+  assert.ok(progress.every((event,i)=>event.total===2&&event.done>=1&&event.done<=2&&(!i||event.done>=progress[i-1].done)));
+});
