@@ -39,6 +39,8 @@ npm run test:browser
 
 `npm run test:browser` 使用真实 Chromium，覆盖 1440px、390px 和 320px 宽度下的安装面板、指南、ZIP 下载及哈希、文件导入、真实 Web Worker 求解、名单持久化、挑战组回溯及阵型卡片边界。截图、失败追踪及 HTML 报告保存到 `artifacts/`。手机尺寸模拟不等于真机 Safari 或 Android 扩展安装验收。CI 会运行浏览器测试，失败时阻止部署。
 
+其中 `--project=extension` 会解压实际发布 ZIP，在独立 Chromium 配置中加载扩展，从扩展管理页确认安装，再加载 `popup.html` 页面并点击入口打开扩展工具。该检查在断网状态下验证 `chrome.storage.local` 保存与刷新恢复、SBC Worker 和阵型生成，未模拟 Chrome API；不等同于手动点击浏览器工具栏、Chrome 商店上架、Edge 或 EA 会话验收。
+
 `npm run package` 将公共脚本同步到 `site/` 并生成扩展 ZIP、用户脚本与 SHA-256 清单。产物只包含本项目运行文件；源码恢复归档不进入安装包。
 
 本地预览可在项目目录运行 `python3 -m http.server 8080 --directory site`，再打开 `http://127.0.0.1:8080/`。使用 Web Worker 的页面应通过 HTTP 或扩展安装打开。

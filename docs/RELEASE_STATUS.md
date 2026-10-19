@@ -20,6 +20,7 @@
 | 规则回归、DOM 交互与恢复工具 | 已通过：56 项 | `npm test`：56 passed，0 failed；含整组回溯重新分配、无重复卡片、部分结果保存、进度及界面到 Worker 的回归；其中静态接口索引工具 4 项，不代表原站后端兼容验收 |
 | HTML/CSS/JS 资源完整性、扩展打包 | 已通过 | `npm run check` 与 ZIP 内容、哈希一致 |
 | Chromium 页面布局与交互 | 已通过：12 项 | 独立 Chromium：1440px、390px、320px；导航与工具跳转、原生下载、输入、弹窗、Worker、存储及阵型卡片边界检查；截图见 CI browser-acceptance 产物 |
+| Chromium 扩展 ZIP 加载与离线运行 | 已通过：1 项 | 解压实际 ZIP、浏览器确认已加载、popup.html 通过 chrome.tabs 打开扩展工具、实际 chrome.storage.local、刷新恢复、离线 Worker 与阵型生成；无 Chrome API 模拟 |
 | Chrome/Edge 扩展真实安装 | 待通过 | 实际加载扩展、打开弹窗与扩展页面；页面测试不代替扩展安装 |
 | Firefox、Safari、Android 安装与使用 | 待通过 | 对应平台真实安装与操作 |
 | 原站布局截图对照 | 待通过 | 相同视口逐项对比 |

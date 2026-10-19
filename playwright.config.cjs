@@ -9,9 +9,10 @@ module.exports = defineConfig({
   reporter: [['list'], ['html', {outputFolder: 'artifacts/browser-report', open: 'never'}]],
   use: {baseURL:'http://127.0.0.1:4173', reducedMotion:'reduce', trace:'retain-on-failure', screenshot:'only-on-failure'},
   projects: [
-    {name:'desktop', use:{viewport:{width:1440,height:1000}}},
-    {name:'narrow', use:{viewport:{width:320,height:900}}},
-    {name:'mobile', use:{...devices['iPhone 13'],defaultBrowserType:'chromium'}}
+    {name:'desktop', testMatch:'release.spec.cjs', use:{viewport:{width:1440,height:1000}}},
+    {name:'narrow', testMatch:'release.spec.cjs', use:{viewport:{width:320,height:900}}},
+    {name:'mobile', testMatch:'release.spec.cjs', use:{...devices['iPhone 13'],defaultBrowserType:'chromium'}},
+    {name:'extension', testMatch:'extension.spec.cjs'}
   ],
   webServer: {command:'python3 -m http.server 4173 --bind 127.0.0.1 --directory site',url:'http://127.0.0.1:4173',reuseExistingServer:false}
 });
