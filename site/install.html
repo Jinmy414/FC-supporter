@@ -52,26 +52,47 @@
     </section>
 
     <section class="install-options">
-      <h2>安装与使用说明</h2>
+      <h2>其他安装方式</h2>
       <details open>
-        <summary><span>本地加载扩展</span><span class="chevron">⌄</span></summary>
+        <summary><span>Chrome / Edge 上的用户脚本</span><span class="chevron">⌄</span></summary>
         <div class="details-body">
-          <p>目前通过 ZIP 下载源码包并在浏览器中“加载已解压的扩展程序”安装。无需登录 FC Supporter 账号。</p>
-          <p>如需升级，下载新版本后，在扩展管理页移除旧版，再加载新文件夹。导出的球员 JSON 可用于备份和迁移数据。</p>
-          <a class="inline-link" href="downloads/fc-supporter.zip" download>再次下载扩展 ZIP →</a>
+          <ol class="install-steps">
+            <li>FC Supporter 目前没有 Tampermonkey 用户脚本版本，因此不需要安装脚本管理器。</li>
+            <li>直接打开 <a class="inline-link" href="./">网页工具</a> 即可使用；球员数据保存在当前浏览器中。</li>
+            <li>如果希望从浏览器工具栏打开，请按上方步骤安装 Chrome / Edge 扩展。</li>
+          </ol>
         </div>
       </details>
       <details>
-        <summary><span>导入球员数据</span><span class="chevron">⌄</span></summary>
+        <summary><span>Firefox</span><span class="chevron">⌄</span></summary>
         <div class="details-body">
-          <p>球员页面支持 CSV 和 JSON。CSV 模板包含名称、评分、位置、俱乐部、联赛、国家、价格、自有标记和基础属性。市场数据需由你手动整理导入。</p>
-          <p>化学反应与球队评分是本地估算；特殊卡加成和游戏内实时价格可能需要自行核对。</p>
+          <ol class="install-steps">
+            <li>在 Firefox 中打开 <a class="inline-link" href="./">FC Supporter 网页工具</a>。</li>
+            <li>在“球员数据”页导入 CSV 或 JSON，工具会在 Firefox 本地保存数据。</li>
+            <li>目前没有单独的 Firefox 扩展包；网页工具无需安装即可使用。</li>
+          </ol>
         </div>
       </details>
       <details>
-        <summary><span>浏览器与平台</span><span class="chevron">⌄</span></summary>
+        <summary><span>iOS / Safari</span><span class="chevron">⌄</span></summary>
         <div class="details-body">
-          <p>本版本提供 Chrome 和 Edge 的 Manifest V3 安装包。手机浏览器及 Firefox 暂未提供单独安装包。</p>
+          <ol class="install-steps">
+            <li>在 iPhone 或 iPad 上用 Safari 打开 <a class="inline-link" href="./">FC Supporter 网页工具</a>。</li>
+            <li>点“分享”按钮，选择“添加到主屏幕”，以后可从主屏幕快捷打开。</li>
+            <li>首次使用时导入 CSV 或 JSON。当前没有 iOS 原生应用或 Safari 扩展。</li>
+          </ol>
+          <p class="platform-note">添加到主屏幕是网页快捷方式，不是独立 App。</p>
+        </div>
+      </details>
+      <details>
+        <summary><span>安卓</span><span class="chevron">⌄</span></summary>
+        <div class="details-body">
+          <ol class="install-steps">
+            <li>在 Android 手机上用 Chrome 或 Firefox 打开 <a class="inline-link" href="./">FC Supporter 网页工具</a>。</li>
+            <li>如需放到桌面，在浏览器菜单中选择“添加到主屏幕”或“安装应用”（若浏览器显示该选项）。</li>
+            <li>打开网页并导入 CSV 或 JSON。当前没有 Android APK 或独立浏览器扩展包。</li>
+          </ol>
+          <p class="platform-note">桌面图标会打开网页工具；数据保存在所用浏览器中。</p>
         </div>
       </details>
     </section>
