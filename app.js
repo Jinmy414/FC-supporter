@@ -2,7 +2,7 @@
   "use strict";
 
   const Core = window.FCSupporterCore;
-  const state = { players: [], results: [], swapChoices: [], squadResult: null, eventResult: null, toastTimer: null };
+  const state = { players: [], results: [], swapChoices: [], squadResult: null, eventResult: null, toastTimer: null, job: null };
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
   const storage = globalThis.chrome?.storage?.local;
@@ -20,21 +20,64 @@
     state.toastTimer = window.setTimeout(() => element.classList.remove("show"), 2800);
   }
 
-  async function savePlayers() {
-    if (storage) await storage.set({ fcSupporterPlayers: state.players });
-    else localStorage.setItem("fcSupporterPlayers", JSON.stringify(state.players));
-    renderAll();
+  function resetPlans() {
+    state.results = []; state.swapChoices = []; state.squadResult = null; state.eventResult = null;
+    $("#swapResults").innerHTML = "";
+    $("#eventResult").className = "empty-state compact-empty";
+    $("#eventResult").innerHTML = '<div class="empty-icon">✦</div><h3>等待活动要求</h3><p>设置活动要求后生成阵容。</p>';
+    $("#eventSummary").textContent = "录入活动规则后生成阵容。";
+    $("#squadSummary").textContent = "设置阵型并生成阵容。";
+  }
+
+  async function savePlayers(nextPlayers = state.players) {
+    try {
+      if (storage) await storage.set({ fcSupporterPlayers: nextPlayers });
+      else localStorage.setItem("fcSupporterPlayers", JSON.stringify(nextPlayers));
+    } catch (_) { throw new Error("浏览器无法保存数据，可能是空间不足或隐私设置限制。原名单已保留，请先导出备份。"); }
+    cancelComputation(); state.players = nextPlayers; resetPlans(); renderAll();
   }
 
   async function loadPlayers() {
-    if (storage) {
-      const saved = await storage.get("fcSupporterPlayers");
-      state.players = Array.isArray(saved.fcSupporterPlayers) ? saved.fcSupporterPlayers.map(Core.normalizePlayer) : [];
-    } else {
-      try { state.players = JSON.parse(localStorage.getItem("fcSupporterPlayers") || "[]").map(Core.normalizePlayer); }
-      catch (_) { state.players = []; }
-    }
+    try {
+      const saved = storage ? (await storage.get("fcSupporterPlayers")).fcSupporterPlayers : JSON.parse(localStorage.getItem("fcSupporterPlayers") || "[]");
+      state.players = saved?.length ? Core.parsePlayersText(JSON.stringify(saved), "saved.json") : [];
+    } catch (_) { state.players = []; toast("无法读取已保存的数据，请检查浏览器存储权限或重新导入备份。", true); }
     renderAll();
+  }
+
+  function setComputing(busy, message = "") {
+    ["#solveBatch", "#buildSquad", "#buildEventSquad"].forEach(selector => {
+      $(selector).disabled = busy; $(selector).setAttribute("aria-busy", String(busy));
+    });
+    $("#jobProgress").hidden = !busy; $("#jobStatus").textContent = message;
+  }
+
+  function cancelComputation() {
+    if (!state.job) return;
+    const job = state.job; state.job = null;
+    job.worker.terminate(); setComputing(false);
+    const error = new Error("已取消计算。"); error.name = "AbortError"; job.reject(error);
+  }
+
+  function compute(type, payload) {
+    if (state.job) throw new Error("请等待当前计算结束，或先点击停止。");
+    if (typeof Worker === "undefined") return Promise.reject(new Error("浏览器不支持后台求解，请使用更新版本的 Chrome、Edge、Firefox 或 Safari。"));
+    return new Promise((resolve,reject) => {
+      let worker;
+      try { worker = new Worker(new URL("solver-worker.js", document.baseURI)); }
+      catch (_) { reject(new Error("无法启动后台求解。请通过在线网页或已安装的扩展打开工具。")); return; }
+      const job = { worker, reject }; state.job = job; setComputing(true, "正在搜索可行阵容…");
+      const finish = () => { worker.terminate(); if (state.job === job) { state.job = null; setComputing(false); } };
+      worker.onmessage = event => {
+        if (state.job !== job) return;
+        if (event.data.type === "progress") { $("#jobStatus").textContent = `正在规划挑战组：${event.data.done} / ${event.data.total}`; return; }
+        if (event.data.type === "error") { finish(); reject(new Error(event.data.message)); return; }
+        if (event.data.type === "result") { finish(); resolve(event.data.result); }
+      };
+      worker.onerror = () => { finish(); reject(new Error("后台求解出现错误，请重试或减少候选球员数量。")); };
+      try { worker.postMessage({ type, players: state.players, ...payload }); }
+      catch (_) { finish(); reject(new Error("无法把球员数据发送给后台求解，请重新导入有效数据。")); }
+    });
   }
 
   function qualityLabel(player) {
@@ -75,6 +118,7 @@
     const query = $("#metaSearch").value.trim().toLowerCase();
     const target = $("#metaTable");
     const ranked = state.players
+      .filter(player => player.positions.includes(position))
       .filter(player => !query || player.name.toLowerCase().includes(query) || player.club.toLowerCase().includes(query))
       .map(player => ({ player, score: Core.roleScore(player, position) }))
       .sort((a, b) => b.score - a.score || b.player.rating - a.player.rating);
@@ -98,7 +142,7 @@
     return `<article class="squad-card">
       <div class="squad-card-heading"><h3>${escapeHTML(name)}</h3><div class="squad-metrics"><span class="metric-pill">评分 <strong>${evaluation.rating}</strong></span><span class="metric-pill">化学 <strong>${evaluation.chemistry}</strong></span><span class="metric-pill">市场 <strong>${evaluation.cost.toLocaleString()}</strong></span></div></div>
       <div class="player-list">${lines}</div>
-      ${result.approximate ? '<div class="field-hint">搜索达到计算上限；显示当前找到的可行解。</div>' : ""}
+      ${result.approximate || result.groupApproximate ? '<div class="field-hint">这是当前找到的可行规划，未证明全组最优；评分与化学反应为本地估算。</div>' : ""}
     </article>`;
   }
 
@@ -115,7 +159,7 @@
     const marketCount = state.results.flatMap(result => result.squad || []).filter(player => !player.owned).length;
     $("#resultSummary").textContent = `已规划 ${solved}/${state.results.length} 个挑战 · ${marketCount} 张市场球员卡`;
     target.className = "results-list";
-    target.innerHTML = `<div class="button-row" style="margin:0 0 12px"><button class="button button-quiet" type="button" data-action="export-purchases">导出市场清单 ↓</button></div>${state.results.map(resultCard).join("")}`;
+    target.innerHTML = `<div class="button-row result-actions"><button class="button button-quiet" type="button" data-action="export-purchases">导出市场清单 ↓</button></div>${state.results.map(resultCard).join("")}`;
     $("#swapPanel").classList.toggle("hidden", !solved);
     fillSwapChallenges();
   }
@@ -161,14 +205,14 @@
     const defenders = slots.filter(item => ["LB", "CB", "RB"].includes(item.position));
     const midfield = slots.filter(item => ["CDM", "CM", "CAM", "LM", "RM"].includes(item.position));
     const forwards = slots.filter(item => ["LW", "RW", "CF", "ST"].includes(item.position));
-    const lines = [keepers, defenders, midfield, forwards].filter(line => line.length);
+    const lines = [forwards, midfield, defenders, keepers].filter(line => line.length);
     const board = lines.map(line => `<div class="formation-line">${line.map(item => `<div class="formation-player"><b>${escapeHTML(item.position)} · ${Core.roleScore(item.player, item.position).toFixed(1)}</b><span title="${escapeHTML(item.player.name)}">${escapeHTML(item.player.name)}</span><small>${escapeHTML(item.player.rating)} OVR</small></div>`).join("")}</div>`).join("");
     const market = result.squad.filter(item => !item.player.owned).length;
-    target.innerHTML = `<div class="squad-card"><div class="squad-card-heading"><h3>${escapeHTML($("#formation").value)} · ${result.squad.length} 人</h3><div class="squad-metrics"><span class="metric-pill">平均评分 <strong>${result.evaluation.rating}</strong></span><span class="metric-pill">化学 <strong>${result.evaluation.chemistry}</strong></span><span class="metric-pill">市场 <strong>${result.evaluation.cost.toLocaleString()}</strong></span></div></div><div class="formation-board">${board}</div><div class="field-hint">${market ? `${market} 张市场球员需要你自行核实价格。` : "阵容由俱乐部球员组成。"}${result.approximate ? " 搜索达到计算上限，当前方案为可行近似解。" : ""}</div></div>`;
+    target.innerHTML = `<div class="squad-card"><div class="squad-card-heading"><h3>${escapeHTML(result.formationName || "阵容")} · ${result.squad.length} 人</h3><div class="squad-metrics"><span class="metric-pill">平均评分 <strong>${result.evaluation.rating}</strong></span><span class="metric-pill">化学 <strong>${result.evaluation.chemistry}</strong></span><span class="metric-pill">市场 <strong>${result.evaluation.cost.toLocaleString()}</strong></span></div></div><div class="formation-board">${board}</div><div class="field-hint">${market ? `${market} 张市场球员需要你自行核实价格。` : "阵容由俱乐部球员组成。"}${result.approximate ? " 搜索达到计算上限，当前方案为可行近似解。" : ""}</div></div>`;
     $("#squadSummary").textContent = `Meta 合计 ${result.score.toFixed(1)} · 估算费用 ${result.evaluation.cost.toLocaleString()} 金币`;
   }
 
-  function runEventBuilder() {
+  async function runEventBuilder() {
     if (!state.players.length) { toast("请先导入球员数据，或载入演示数据。", true); return; }
     const requirement = {
       name: `${$("#eventType").value} · 活动阵容`,
@@ -176,15 +220,17 @@
       minRating: Number($("#eventMinRating").value) || 0,
       minChemistry: Number($("#eventMinChemistry").value) || 0,
       budget: Number($("#eventBudget").value) || 0,
-      maxSameClub: Number($("#eventMaxSameClub").value) || 11,
-      maxSameLeague: Number($("#eventMaxSameLeague").value) || 11,
-      maxSameNation: Number($("#eventMaxSameNation").value) || 11,
+      maxSameClub: Number($("#eventMaxSameClub").value),
+      maxSameLeague: Number($("#eventMaxSameLeague").value),
+      maxSameNation: Number($("#eventMaxSameNation").value),
       minUniqueClubs: Number($("#eventMinUniqueClubs").value) || 0,
       minUniqueLeagues: Number($("#eventMinUniqueLeagues").value) || 0,
       minUniqueNations: Number($("#eventMinUniqueNations").value) || 0,
       quality: $("#eventQuality").value
     };
-    const result = Core.buildSquad(state.players, { ...requirement, includeMarket: $("#eventIncludeMarket").checked });
+    let result;
+    try { Core.validateRequirement(requirement); result = await compute("squad", { options: { ...requirement, includeMarket: $("#eventIncludeMarket").checked } }); }
+    catch (error) { if (error.name !== "AbortError") toast(error.message, true); return; }
     state.eventResult = { ...result, requirement, squad: result.squad?.map(item => item.player) || null };
     const target = $("#eventResult");
     if (!result.squad) {
@@ -216,6 +262,9 @@
     $$(".view").forEach(view => view.classList.toggle("active", view.id === `view-${name}`));
     const label = ({ sbc: "SBC 求解", squad: "阵容构建", events: "活动阵容", meta: "Meta 评分", players: "球员数据" })[name] || "FC Supporter";
     $("#breadcrumb").textContent = label;
+    document.title = `${label} · FC Supporter`;
+    $$(".nav-item").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.view === name)));
+    if (location.hash !== `#${name}`) history.replaceState(null, "", `#${name}`);
   }
 
   function download(name, content, type = "text/plain;charset=utf-8") {
@@ -227,11 +276,12 @@
     document.body.append(anchor);
     anchor.click();
     anchor.remove();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   function csvCell(value) {
-    const text = String(value ?? "");
+    let text = String(value ?? "");
+    if (typeof value === "string" && /^[\s]*[=+@-]/.test(text)) text = "'" + text;
     return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
   }
 
@@ -277,9 +327,9 @@
   async function importFile(file) {
     if (!file) return;
     try {
+      if (file.size > 5 * 1024 * 1024) throw new Error("文件超过 5 MB，请拆分后导入。");
       const players = Core.parsePlayersText(await file.text(), file.name);
-      state.players = players;
-      await savePlayers();
+      await savePlayers(players);
       $("#importStatus").textContent = `已导入 ${players.length} 张球员卡`;
       toast(`已导入 ${players.length} 张球员卡。`);
     } catch (error) {
@@ -291,26 +341,35 @@
   }
 
   function readRequirements() {
+    if (!$("#useJson").checked) {
+      const value = { name: $("#sbcName").value.trim() || "自定义挑战", formation: $("#sbcFormation").value, quality: $("#sbcQuality").value };
+      for (const [key,id] of [["minRating","sbcMinRating"],["minChemistry","sbcMinChemistry"],["budget","sbcBudget"],["maxSameClub","sbcMaxSameClub"],["minUniqueLeagues","sbcMinUniqueLeagues"]]) {
+        const input = $("#"+id);
+        if (!input.value || !input.reportValidity()) throw new Error("请填写有效的挑战要求。");
+        value[key] = Number(input.value);
+      }
+      Core.validateRequirement(value); return [value];
+    }
     let value;
     try { value = JSON.parse($("#requirements").value); }
     catch (error) { throw new Error(`要求 JSON 格式错误：${error.message}`); }
     const list = Array.isArray(value) ? value : [value];
     if (!list.length || list.length > 20) throw new Error("请提供 1 到 20 个挑战要求。");
     if (list.some(item => !item || typeof item !== "object" || Array.isArray(item))) throw new Error("每个挑战要求都需要是 JSON 对象。");
-    return list.map((item, index) => ({ ...item, name: item.name || `挑战 ${index + 1}` }));
+    return list.map((item, index) => Core.validateRequirement({ ...item, name: item.name || `挑战 ${index + 1}` }));
   }
 
-  function solveChallenges() {
+  async function solveChallenges() {
     if (!state.players.length) { toast("请先导入球员数据，或载入演示数据。", true); return; }
     try {
       const requirements = readRequirements();
-      state.results = Core.solveBatch(state.players, requirements, $("#includeMarket").checked);
+      state.results = await compute("batch", { requirements, includeMarket: $("#includeMarket").checked });
       state.swapChoices = [];
       $("#swapResults").innerHTML = "";
       renderResults();
       const solved = state.results.filter(result => result.squad).length;
       toast(`已完成规划：${solved}/${state.results.length} 个挑战找到方案。`);
-    } catch (error) { toast(error.message || "无法求解挑战。", true); }
+    } catch (error) { if (error.name !== "AbortError") toast(error.message || "无法求解挑战。", true); }
   }
 
   function findSwapChoices() {
@@ -318,7 +377,8 @@
     const slot = Number($("#swapSlot").value);
     const result = state.results[challengeIndex];
     if (!result?.squad) return;
-    state.swapChoices = Core.findSwaps(state.players, result.squad, slot, result.requirement, $("#includeMarket").checked).map(choice => ({ ...choice, challengeIndex, slot }));
+    const reservedIds = new Set(state.results.flatMap((other, index) => index === challengeIndex ? [] : (other.squad || []).map(player => player.id)));
+    state.swapChoices = Core.findSwaps(state.players, result.squad, slot, result.requirement, $("#includeMarket").checked, 5, reservedIds).map(choice => ({ ...choice, challengeIndex, slot }));
     renderSwapChoices();
     if (state.swapChoices.length) toast(`找到 ${state.swapChoices.length} 个有效替代方案。`);
   }
@@ -335,14 +395,17 @@
     toast(`已在本地方案中换入 ${choice.player.name}。`);
   }
 
-  function runSquadBuilder() {
+  async function runSquadBuilder() {
     if (!state.players.length) { toast("请先导入球员数据，或载入演示数据。", true); return; }
-    const result = Core.buildSquad(state.players, {
+    let result;
+    try { result = await compute("squad", { options: {
       formation: $("#formation").value,
       budget: Number($("#squadBudget").value) || 0,
       minChemistry: Number($("#squadChemistry").value) || 0,
       includeMarket: $("#squadSource").value === "all"
-    });
+    } }); }
+    catch (error) { if (error.name !== "AbortError") toast(error.message, true); return; }
+    result.formationName = $("#formation").value;
     state.squadResult = result;
     renderBuiltSquad();
     if (result.squad) toast("已生成阵容规划方案。");
@@ -352,8 +415,15 @@
   function setup() {
     $$(".nav-item").forEach(button => button.addEventListener("click", () => activateView(button.dataset.view)));
     $("#solveBatch").addEventListener("click", solveChallenges);
-    $("#loadDemo").addEventListener("click", async () => { state.players = makeDemoPlayers(); await savePlayers(); toast("演示球员数据已载入。"); });
-    $("#rosterDemo").addEventListener("click", async () => { state.players = makeDemoPlayers(); await savePlayers(); toast("演示球员数据已载入。"); });
+    const loadDemo = async () => {
+      if (state.players.length && !window.confirm("演示名单将替换当前球员数据。建议先导出备份，是否继续？")) return;
+      try { await savePlayers(makeDemoPlayers()); toast("演示球员数据已载入。"); }
+      catch (error) { toast(error.message, true); }
+    };
+    $("#loadDemo").addEventListener("click", loadDemo);
+    $("#rosterDemo").addEventListener("click", loadDemo);
+    $("#useJson").addEventListener("change", () => { $("#sbcForm").disabled = $("#useJson").checked; });
+    $("#cancelJob").addEventListener("click", () => { cancelComputation(); toast("已停止计算。"); });
     $("#buildSquad").addEventListener("click", runSquadBuilder);
     $("#buildEventSquad").addEventListener("click", runEventBuilder);
     $("#metaPosition").addEventListener("change", renderMetaTable);
@@ -367,17 +437,20 @@
     });
     $("#playerFile").addEventListener("change", event => importFile(event.target.files[0]));
     $("#topImport").addEventListener("click", () => { activateView("players"); $("#playerFile").click(); });
-    $("#downloadTemplate").addEventListener("click", () => download("players-template.csv", "id,name,rating,positions,price,owned,rarity,league,nation,club,pace,shooting,passing,dribbling,defending,physical,meta,chemBonus\r\n", "text/csv;charset=utf-8"));
+    $("#downloadTemplate").addEventListener("click", () => download("players-template.csv", "id,assetId,name,rating,positions,price,owned,rarity,league,nation,club,pace,shooting,passing,dribbling,defending,physical,meta,chemBonus\r\n", "text/csv;charset=utf-8"));
     $("#exportPlayers").addEventListener("click", () => download("fc-supporter-players.json", JSON.stringify(state.players, null, 2), "application/json;charset=utf-8"));
     $("#clearPlayers").addEventListener("click", async () => {
       if (!window.confirm("清空保存在此浏览器中的球员数据？此操作不能撤销。")) return;
-      state.players = []; state.results = []; state.squadResult = null; await savePlayers();
-      $("#importStatus").textContent = "本地数据已清空"; toast("球员数据已清空。");
+      try { await savePlayers([]); $("#importStatus").textContent = "本地数据已清空"; toast("球员数据已清空。"); }
+      catch (error) { toast(error.message, true); }
     });
     const dropZone = $("#dropZone");
     ["dragenter", "dragover"].forEach(type => dropZone.addEventListener(type, event => { event.preventDefault(); dropZone.classList.add("dragover"); }));
     ["dragleave", "drop"].forEach(type => dropZone.addEventListener(type, event => { event.preventDefault(); dropZone.classList.remove("dragover"); }));
     dropZone.addEventListener("drop", event => importFile(event.dataTransfer.files[0]));
+    const initial = location.hash.slice(1);
+    activateView(["sbc", "squad", "events", "meta", "players"].includes(initial) ? initial : "sbc");
+    window.addEventListener("hashchange", () => { const name = location.hash.slice(1); if (["sbc","squad","events","meta","players"].includes(name)) activateView(name); });
     loadPlayers();
   }
 

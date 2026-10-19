@@ -1,112 +1,251 @@
 <!doctype html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="下载 FC Supporter 本地规划扩展，离线整理球员数据、规划 SBC 阵容并比较位置评分。">
-  <meta name="theme-color" content="#0e1219">
+  <meta name="theme-color" content="#0f131c">
+  <meta name="description" content="安装 FC Supporter。支持 Chrome、Edge、Firefox、iOS Safari 和 Android 用户脚本。">
   <title>安装 FC Supporter</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <script src="install.js" defer></script>
 </head>
+
 <body>
+  <a class="skip-link" href="#install">跳到安装步骤</a>
   <header class="site-header">
-    <a class="site-brand" href="#top" aria-label="FC Supporter 首页"><span class="logo-mark">FC</span><span>FC <b>Supporter</b></span></a>
-    <nav class="site-nav" aria-label="主导航">
-      <a href="./">网页工具</a>
-      <a href="#features">功能</a>
-      <a class="current" href="#install">安装</a>
-      <a href="#privacy">隐私</a>
-      <a class="lang" href="#top"><span class="flag">中</span> 中文⌄</a>
-      <a class="repo-link" href="https://github.com/Jinmy414/FC-supporter">GitHub ↗</a>
-    </nav>
+    <div class="header-inner"><a class="site-brand" href="./" aria-label="FC Supporter 首页"><svg class="brand-icon"
+          viewBox="0 0 28 32" aria-hidden="true">
+          <rect x="3" y="4" width="17" height="25" rx="4" transform="rotate(-13 11 16)" fill="none"
+            stroke="currentColor" stroke-width="1.5" opacity=".55" />
+          <rect x="8" y="3" width="17" height="25" rx="4" transform="rotate(10 17 15)" fill="currentColor" />
+          <path d="m16.5 9 4 6-4 6-4-6z" fill="#0d1418" />
+        </svg><span>FC<span class="accent">Supporter</span></span></a>
+      <nav class="site-nav" aria-label="主导航">
+        <details class="nav-menu">
+          <summary>SBC <span>⌄</span></summary>
+          <div class="nav-dropdown"><a href="app.html#sbc">SBC 求解器</a><a href="app.html#events">活动阵容</a></div>
+        </details>
+        <details class="nav-menu">
+          <summary>球员 <span>⌄</span></summary>
+          <div class="nav-dropdown"><a href="app.html#players">球员数据</a><a href="app.html#meta">Meta 评分</a><a
+              href="app.html#squad">阵容生成器</a></div>
+        </details>
+        <details class="nav-menu">
+          <summary>扩展 <span>⌄</span></summary>
+          <div class="nav-dropdown"><a href="#install">Chrome / Edge</a><a href="#userscript">用户脚本</a><a href="#ios">iOS
+              / Safari</a><a href="#android">安卓</a></div>
+        </details>
+        <button class="nav-link" type="button" data-dialog="guideDialog">指南</button><button class="nav-link gold"
+          type="button" data-dialog="featuresDialog">Gold 功能</button>
+      </nav><span class="language" aria-label="当前语言：中文"><span aria-hidden="true">🇨🇳</span> ZH <span
+          aria-hidden="true">⌄</span></span><a class="header-tool" href="app.html">打开工具</a><a
+        class="button button-primary header-install" href="#install">安装</a>
+    </div>
   </header>
-
-  <main id="top" class="page-wrap">
-    <section class="hero">
-      <div class="eyebrow"><span class="pulse"></span> FC SUPPORTER · LOCAL PLANNER</div>
-      <h1>安装 <span>FC Supporter</span></h1>
-      <p>本地规划 SBC 和阵容。导入自己的球员表，即可在浏览器中离线使用。</p>
-      <a class="download-button" href="./">直接打开网页工具 <span>→</span></a>
-    </section>
-
-    <section id="install" class="install-card featured-card">
-      <div class="card-title"><span class="device-icon">▣</span><h2>Chrome / Edge 扩展</h2><span class="tag">推荐</span></div>
-      <div class="card-rule"></div>
-      <ol class="steps">
-        <li><span class="step-index">1</span><div><b>下载 FC Supporter</b><p>获取扩展安装包并解压到本机。</p><a class="download-button" href="downloads/fc-supporter.zip" download><span>↓</span> 下载扩展 ZIP</a><small class="version-note">当前版本 1.0.0 · 仅提供源码包，首次安装需手动加载</small></div></li>
-        <li><span class="step-index">2</span><div><b>在浏览器中打开扩展管理页</b><p>在 Chrome 地址栏输入 <code>chrome://extensions</code>；Edge 用户输入 <code>edge://extensions</code>。</p></div></li>
-        <li><span class="step-index">3</span><div><b>开启开发者模式并加载扩展</b><p>开启右上角的“开发者模式”，点击“加载已解压的扩展程序”，选择解压后的文件夹。</p></div></li>
-        <li><span class="step-index">4</span><div><b>打开 FC Supporter 并导入球员表</b><p>点击浏览器工具栏里的扩展图标，在“球员数据”页导入 CSV 或 JSON。</p></div></li>
-      </ol>
-    </section>
-
-    <section id="features" class="features-section">
-      <div class="section-heading"><div><div class="eyebrow">TOOLS INCLUDED</div><h2>为规划阵容准备的工具</h2></div><a href="https://github.com/Jinmy414/FC-supporter">查看源代码 ↗</a></div>
-      <div class="feature-grid">
-        <article class="feature-card"><span class="feature-icon">▦</span><h3>SBC 阵容规划</h3><p>按球员评分、估算化学反应、预算和俱乐部约束求解，最多批量规划 20 个挑战。</p><span class="feature-foot">使用本地导入数据</span></article>
-        <article class="feature-card"><span class="feature-icon">⇄</span><h3>解后换人</h3><p>保持其他球员不变，查找仍满足当前要求的替代卡，并更新本地方案。</p><span class="feature-foot">每次替换都会重新核对要求</span></article>
-        <article class="feature-card"><span class="feature-icon">◇</span><h3>阵容构建</h3><p>选择阵型、球员来源和预算，比较各位置的估算 Meta 分数。</p><span class="feature-foot">支持多种常见阵型</span></article>
-        <article class="feature-card"><span class="feature-icon">✦</span><h3>Gauntlet / 活动阵容</h3><p>按活动的评分、化学反应、预算和俱乐部限制生成一套十一人方案。</p><span class="feature-foot">规则由你输入，方案在本地生成</span></article>
-        <article class="feature-card"><span class="feature-icon">◈</span><h3>位置评分</h3><p>以你导入的 Meta 值或基础属性估算球员角色表现，并按位置筛选。</p><span class="feature-foot">数据可随时导出</span></article>
-      </div>
-    </section>
-
-    <section class="install-options">
-      <h2>其他安装方式</h2>
-      <details open>
-        <summary><span>Chrome / Edge 上的用户脚本</span><span class="chevron">⌄</span></summary>
-        <div class="details-body">
-          <ol class="install-steps">
-            <li>FC Supporter 目前没有 Tampermonkey 用户脚本版本，因此不需要安装脚本管理器。</li>
-            <li>直接打开 <a class="inline-link" href="./">网页工具</a> 即可使用；球员数据保存在当前浏览器中。</li>
-            <li>如果希望从浏览器工具栏打开，请按上方步骤安装 Chrome / Edge 扩展。</li>
-          </ol>
+  <main id="install" class="install-section">
+    <div class="install-container">
+      <h1>安装 FC<span class="accent">Supporter</span></h1>
+      <section class="featured-card" aria-labelledby="chromeTitle">
+        <div class="card-heading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            aria-hidden="true">
+            <rect x="2" y="3" width="20" height="14" rx="2" />
+            <path d="M8 21h8m-4-4v4" />
+          </svg>
+          <h2 id="chromeTitle">Chrome / Edge 扩展</h2>
         </div>
-      </details>
-      <details>
-        <summary><span>Firefox</span><span class="chevron">⌄</span></summary>
-        <div class="details-body">
-          <ol class="install-steps">
-            <li>在 Firefox 中打开 <a class="inline-link" href="./">FC Supporter 网页工具</a>。</li>
-            <li>在“球员数据”页导入 CSV 或 JSON，工具会在 Firefox 本地保存数据。</li>
-            <li>目前没有单独的 Firefox 扩展包；网页工具无需安装即可使用。</li>
-          </ol>
+        <div class="card-rule"></div>
+        <ol class="steps">
+          <li>
+            <div class="step-line"><span class="step-index">1</span>
+              <div>获取 FC Supporter 扩展安装包，并解压到本机。</div>
+            </div><a class="button button-primary step-action" href="downloads/fc-supporter.zip" download>下载 Chrome
+              扩展</a>
+          </li>
+          <li>
+            <div class="step-line"><span class="step-index">2</span>
+              <div>在扩展管理页开启“开发者模式”，点击“加载已解压的扩展程序”，选择解压后的文件夹。</div>
+            </div><button class="copy-button step-action" type="button" id="copyExtensionUrl">复制扩展管理地址 <span
+                aria-hidden="true">↗</span></button>
+          </li>
+          <li>
+            <div class="step-line"><span class="step-index">3</span>
+              <div>点击浏览器工具栏里的 FC Supporter，打开阵容工具。</div>
+            </div>
+          </li>
+        </ol>
+        <p class="distribution-note">1.1.0 测试版 · 源码安装包 · 尚未上架应用商店</p>
+      </section>
+      <section class="other-methods" aria-labelledby="otherTitle">
+        <h2 id="otherTitle">其他安装方式</h2>
+        <div class="options-list">
+          <details id="userscript" class="install-option">
+            <summary>Chrome / Edge 上的用户脚本<svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m7 10 5 5 5-5" />
+              </svg></summary>
+            <div class="details-body">
+              <ol class="steps">
+                <li>
+                  <div class="step-line"><span class="step-index">1</span>
+                    <div>从浏览器的扩展商店安装 <a href="https://www.tampermonkey.net/" target="_blank"
+                        rel="noopener">Tampermonkey</a>。</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">2</span>
+                    <div>在 <code>chrome://extensions</code> 或 <code>edge://extensions</code> 中打开 Tampermonkey
+                      的详情，并启用“允许用户脚本”。旧版本可启用“开发者模式”。</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">3</span>
+                    <div>安装 FC Supporter 用户脚本，并在 Tampermonkey 中确认安装。</div>
+                  </div><a class="button button-primary step-action" href="downloads/fc-supporter.user.js">安装 FC
+                    Supporter</a>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">4</span>
+                    <div>打开 EA FC 网页版，点击页面右下角的 FC Supporter，进入阵容规划工具。</div>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </details>
+          <details id="firefox" class="install-option">
+            <summary>Firefox<svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m7 10 5 5 5-5" />
+              </svg></summary>
+            <div class="details-body">
+              <ol class="steps">
+                <li>
+                  <div class="step-line"><span class="step-index">1</span>
+                    <div>从 Firefox 附加组件商店安装 <a href="https://addons.mozilla.org/firefox/addon/tampermonkey/"
+                        target="_blank" rel="noopener">Tampermonkey</a>。</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">2</span>
+                    <div>点击下方按钮，在脚本管理器中确认安装。</div>
+                  </div><a class="button button-primary step-action" href="downloads/fc-supporter.user.js">安装 FC
+                    Supporter</a>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">3</span>
+                    <div>打开 EA FC 网页版，点击 FC Supporter 入口。也可直接打开 <a href="app.html">网页工具</a>。</div>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </details>
+          <details id="ios" class="install-option">
+            <summary>iOS / Safari<svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m7 10 5 5 5-5" />
+              </svg></summary>
+            <div class="details-body">
+              <ol class="steps">
+                <li>
+                  <div class="step-line"><span class="step-index">1</span>
+                    <div>在 iPhone 或 iPad 上安装 <a href="https://apps.apple.com/app/userscripts/id1463298887"
+                        target="_blank" rel="noopener">Userscripts</a>，并打开一次。</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">2</span>
+                    <div>在“设置 → Safari → 扩展”中启用 Userscripts，并允许它在 EA 网页上运行。</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">3</span>
+                    <div>用 Safari 打开用户脚本，点地址栏的扩展菜单，选择 Userscripts，再确认安装。</div>
+                  </div><a class="button button-primary step-action" href="downloads/fc-supporter.user.js">安装 FC
+                    Supporter</a>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">4</span>
+                    <div>回到 EA FC 网页版并刷新，点击 FC Supporter 入口。</div>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </details>
+          <details id="android" class="install-option">
+            <summary>安卓<svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m7 10 5 5 5-5" />
+              </svg></summary>
+            <div class="details-body">
+              <ol class="steps">
+                <li>
+                  <div class="step-line"><span class="step-index">1</span>
+                    <div>使用支持扩展的 Firefox，安装 <a href="https://addons.mozilla.org/firefox/addon/tampermonkey/"
+                        target="_blank" rel="noopener">Tampermonkey</a>。</div>
+                  </div>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">2</span>
+                    <div>在 Firefox 中安装用户脚本并确认。</div>
+                  </div><a class="button button-primary step-action" href="downloads/fc-supporter.user.js">安装 FC
+                    Supporter</a>
+                </li>
+                <li>
+                  <div class="step-line"><span class="step-index">3</span>
+                    <div>打开 EA FC 网页版，必要时在浏览器菜单启用“桌面版网站”，点击 FC Supporter 入口。</div>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </details>
         </div>
-      </details>
-      <details>
-        <summary><span>iOS / Safari</span><span class="chevron">⌄</span></summary>
-        <div class="details-body">
-          <ol class="install-steps">
-            <li>在 iPhone 或 iPad 上用 Safari 打开 <a class="inline-link" href="./">FC Supporter 网页工具</a>。</li>
-            <li>点“分享”按钮，选择“添加到主屏幕”，以后可从主屏幕快捷打开。</li>
-            <li>首次使用时导入 CSV 或 JSON。当前没有 iOS 原生应用或 Safari 扩展。</li>
-          </ol>
-          <p class="platform-note">添加到主屏幕是网页快捷方式，不是独立 App。</p>
-        </div>
-      </details>
-      <details>
-        <summary><span>安卓</span><span class="chevron">⌄</span></summary>
-        <div class="details-body">
-          <ol class="install-steps">
-            <li>在 Android 手机上用 Chrome 或 Firefox 打开 <a class="inline-link" href="./">FC Supporter 网页工具</a>。</li>
-            <li>如需放到桌面，在浏览器菜单中选择“添加到主屏幕”或“安装应用”（若浏览器显示该选项）。</li>
-            <li>打开网页并导入 CSV 或 JSON。当前没有 Android APK 或独立浏览器扩展包。</li>
-          </ol>
-          <p class="platform-note">桌面图标会打开网页工具；数据保存在所用浏览器中。</p>
-        </div>
-      </details>
-    </section>
-
-    <section id="privacy" class="privacy-card">
-      <div class="privacy-icon">✓</div>
-      <div><h2>本地运行，数据留在你的浏览器</h2><p>扩展不连接 EA、不读取 EA 登录状态、不访问俱乐部或转会市场，也不会自动买球员或提交 SBC。球员数据仅保存在浏览器本地存储中。</p></div>
-    </section>
-
-    <section class="fine-print">
-      <p>FC Supporter 是独立的社区工具，与 Electronic Arts 或 fodder.gg 无关。EA 建议避免第三方浏览器扩展，并禁止自动买家和机器人。请查看 <a href="https://help.ea.com/en/articles/ea-sports-fc/fc-rules/">EA SPORTS FC 规则</a>。阵容估算仅供规划参考。</p>
-    </section>
+      </section>
+      <p class="install-note">用户脚本目前提供 EA 页面入口，规划工具使用你导入的本地名单。真实 EA 数据同步、购买和提交功能尚未通过验收。<button type="button"
+          class="text-link" data-dialog="featuresDialog">查看功能进度</button></p>
+      <p class="web-alternative">也可以 <a href="app.html">直接使用网页工具 <span aria-hidden="true">›</span></a></p>
+    </div>
   </main>
-
-  <footer class="site-footer"><a class="site-brand" href="#top"><span class="logo-mark">FC</span><span>FC <b>Supporter</b></span></a><span>本地规划工具 · 公开源码</span><a href="https://github.com/Jinmy414/FC-supporter">GitHub 仓库 ↗</a></footer>
+  <footer class="site-footer"><span>FC Supporter · 社区项目</span>
+    <div><button class="text-link" data-dialog="privacyDialog" type="button">隐私</button><a
+        href="https://github.com/Jinmy414/FC-supporter" target="_blank" rel="noopener">GitHub ↗</a></div>
+  </footer>
+  <div class="notice-bar" id="dataNotice">
+    <div>
+      <p>球员数据仅保存在你的浏览器中。<button class="text-link" data-dialog="privacyDialog" type="button">隐私说明</button></p><button
+        class="button button-primary" id="dismissNotice" type="button">知道了</button>
+    </div>
+  </div>
+  <dialog id="guideDialog" aria-labelledby="guideTitle">
+    <div class="dialog-heading">
+      <h2 id="guideTitle">开始使用</h2><button class="close-dialog" type="button" aria-label="关闭指南">×</button>
+    </div>
+    <ol class="guide-steps">
+      <li>安装扩展或直接打开网页工具。</li>
+      <li>在“球员数据”中导入 CSV / JSON，也可以先载入演示名单。</li>
+      <li>设置 SBC 要求、阵型和预算，生成阵容规划。</li>
+      <li>导出名单备份。网页版和扩展版的数据分别保存在各自浏览器空间中。</li>
+    </ol><a class="button button-primary" href="app.html">打开网页工具</a>
+  </dialog>
+  <dialog id="featuresDialog" aria-labelledby="featuresTitle">
+    <div class="dialog-heading">
+      <h2 id="featuresTitle">功能进度</h2><button class="close-dialog" type="button" aria-label="关闭功能进度">×</button>
+    </div>
+    <p class="dialog-intro">当前为独立功能测试版。以下状态对应本项目的实际能力。</p>
+    <ul class="feature-status">
+      <li><span>SBC 单个 / 整组规划</span><b>本地名单</b></li>
+      <li><span>市场球员与预算</span><b>导入估价</b></li>
+      <li><span>解后换人</span><b>本地方案</b></li>
+      <li><span>阵容生成器 / 活动阵容</span><b>本地规划</b></li>
+      <li><span>位置 Meta 评分</span><b>属性估算</b></li>
+      <li><span>EA 俱乐部同步 / 实时交易</span><em>待真实验收</em></li>
+    </ul><a class="button button-primary" href="app.html">体验规划工具</a>
+  </dialog>
+  <dialog id="privacyDialog" aria-labelledby="privacyTitle">
+    <div class="dialog-heading">
+      <h2 id="privacyTitle">隐私说明</h2><button class="close-dialog" type="button" aria-label="关闭隐私说明">×</button>
+    </div>
+    <p>FC Supporter 将导入的球员数据保存在当前浏览器的本地存储中，不上传名单，不收集 EA 密码。</p>
+    <p>用户脚本仅添加工具入口。点击入口会打开本项目网页，不读取 EA 页面中的账号或俱乐部数据。</p>
+    <p>你可以在“球员数据”页导出备份或清空数据。清除浏览器站点数据也会删除本地名单。</p>
+  </dialog>
+  <div class="site-toast" id="siteToast" role="status" aria-live="polite"></div>
 </body>
+
 </html>
