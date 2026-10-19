@@ -57,6 +57,9 @@ summary::-webkit-details-marker { display:none; }
 details[open] .chevron { transform:rotate(180deg); }
 .details-body { padding:0 14px 14px; color:#a6b0bb; font-size:10px; line-height:1.65; }
 .details-body p { margin:0 0 8px; }
+.install-steps { display:grid; gap:8px; margin:0; padding:4px 0 0 23px; }
+.install-steps li { padding-left:2px; }
+.platform-note { margin-top:9px !important; color:#788794; font-size:9px; }
 .inline-link { color:#50dfb8; text-decoration:none; }
 .privacy-card { display:flex; align-items:flex-start; gap:13px; margin-top:19px; padding:16px; border:1px solid #2c493b; border-radius:12px; background:#14221b; }
 .privacy-icon { width:24px; height:24px; flex:none; display:grid; place-items:center; border-radius:50%; background:#244333; color:#8bf0ae; font-size:12px; }
