@@ -17,7 +17,7 @@
 
 | 检查 | 状态 | 通过依据 |
 | --- | --- | --- |
-| 规则回归与 DOM 交互 | 已通过：43 项 | `npm test`：43 passed，0 failed；包括独立线程协议 |
+| 规则回归、DOM 交互与恢复工具 | 已通过：47 项 | `npm test`：47 passed，0 failed；其中原功能与打包 43 项、静态接口索引工具 4 项；不代表原站后端兼容验收 |
 | HTML/CSS/JS 资源完整性、扩展打包 | 已通过 | `npm run check` 与 ZIP 内容、哈希一致 |
 | Chrome/Edge 真浏览器布局与交互 | 待通过 | 桌面、窄屏截图和真实操作 |
 | Firefox、Safari、Android 安装与使用 | 待通过 | 对应平台真实安装与操作 |

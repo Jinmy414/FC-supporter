@@ -1,0 +1,617 @@
+{
+  "schemaVersion": 1,
+  "sourceSHA256": "5c13b21fc88ef4aaa2cbfff2dd203720fa30c084d1be95390b08704ff855f0e0",
+  "scope": "Observed client call sites only; not a server schema or proof of server behaviour.",
+  "calls": [
+    {
+      "line": 2295,
+      "function": "ra",
+      "routeExpression": "\"/prices/observed\"",
+      "literalRoute": "/prices/observed",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            platform: n,\n            resourceId: Number(e),\n            price: Number(t)\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"content-type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            platform: n,\n            resourceId: Number(e),\n            price: Number(t)\n          }),\n          silent: !0\n        }"
+    },
+    {
+      "line": 2417,
+      "function": "WT",
+      "routeExpression": "\"/prices/observed\"",
+      "literalRoute": "/prices/observed",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            platform: n,\n            source: \"client-buy\",\n            nothingBelow: t\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"content-type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            platform: n,\n            source: \"client-buy\",\n            nothingBelow: t\n          }),\n          silent: !0\n        }"
+    },
+    {
+      "line": 2688,
+      "function": "Ru",
+      "routeExpression": "\"/prices/observed\"",
+      "literalRoute": "/prices/observed",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            platform: e,\n            source: n2,\n            ...t\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"content-type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            platform: e,\n            source: n2,\n            ...t\n          }),\n          silent: !0\n        }"
+    },
+    {
+      "line": 2725,
+      "function": "c2",
+      "routeExpression": "o",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n            method: \"GET\",\n            silent: !0\n          }"
+    },
+    {
+      "line": 7678,
+      "function": "CA",
+      "routeExpression": "\"/meta/lookup\"",
+      "literalRoute": "/meta/lookup",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n                resourceIds: r\n              })",
+      "optionsExpression": "{\n              method: \"POST\",\n              headers: {\n                \"Content-Type\": \"application/json\"\n              },\n              body: JSON.stringify({\n                resourceIds: r\n              }),\n              silent: !0\n            }"
+    },
+    {
+      "line": 7965,
+      "function": "NA",
+      "routeExpression": "\"/meta/score\"",
+      "literalRoute": "/meta/score",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n                cards: r\n              })",
+      "optionsExpression": "{\n              method: \"POST\",\n              headers: {\n                \"Content-Type\": \"application/json\"\n              },\n              body: JSON.stringify({\n                cards: r\n              }),\n              silent: !0\n            }"
+    },
+    {
+      "line": 8152,
+      "function": "qA",
+      "routeExpression": "\"/meta/lookup\"",
+      "literalRoute": "/meta/lookup",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n                  resourceIds: [],\n                  slots: r.map(([, g]) => ({\n                    resourceId: Number(g.item.definitionId),\n                    roleId: g.ctx.roleId,\n                    chemStyleId: g.ctx.chemStyleId,\n                    chem: g.ctx.chem\n                  }))\n                })",
+      "optionsExpression": "{\n                method: \"POST\",\n                headers: {\n                  \"Content-Type\": \"application/json\"\n                },\n                body: JSON.stringify({\n                  resourceIds: [],\n                  slots: r.map(([, g]) => ({\n                    resourceId: Number(g.item.definitionId),\n                    roleId: g.ctx.roleId,\n                    chemStyleId: g.ctx.chemStyleId,\n                    chem: g.ctx.chem\n                  }))\n                }),\n                silent: !0\n              }"
+    },
+    {
+      "line": 8205,
+      "function": "qA",
+      "routeExpression": "\"/meta/score\"",
+      "literalRoute": "/meta/score",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n                  cards: c\n                })",
+      "optionsExpression": "{\n                method: \"POST\",\n                headers: {\n                  \"Content-Type\": \"application/json\"\n                },\n                body: JSON.stringify({\n                  cards: c\n                }),\n                silent: !0\n              }"
+    },
+    {
+      "line": 14621,
+      "function": "oL",
+      "routeExpression": "qo(\"/v1/solves\")",
+      "literalRoute": "/v1/solves",
+      "solveBase": true,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify(n)",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"Content-Type\": \"application/json\",\n            Prefer: \"wait=25\"\n          },\n          body: JSON.stringify(n),\n          gzip: !0,\n          timeoutMs: wS,\n          signal: t\n        }"
+    },
+    {
+      "line": 14647,
+      "function": "oL",
+      "routeExpression": "qo(\"/v1/solves/\" + r.id)",
+      "literalRoute": null,
+      "solveBase": true,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n            signal: t\n          }"
+    },
+    {
+      "line": 14656,
+      "function": "oL",
+      "routeExpression": "qo(\"/v1/solves/\" + r.id)",
+      "literalRoute": null,
+      "solveBase": true,
+      "method": "DELETE",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          method: \"DELETE\",\n          silent: !0\n        }"
+    },
+    {
+      "line": 14711,
+      "function": "aL",
+      "routeExpression": "qo(\"/replace\")",
+      "literalRoute": "/replace",
+      "solveBase": true,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify(e)",
+      "optionsExpression": "{\n        method: \"POST\",\n        headers: {\n          \"Content-Type\": \"application/json\"\n        },\n        body: JSON.stringify(e),\n        gzip: !0\n      }"
+    },
+    {
+      "line": 16523,
+      "function": "dd",
+      "routeExpression": "\"/v1/prices/observed\"",
+      "literalRoute": "/v1/prices/observed",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            t: Math.max(0, Math.round((Date.now() - r) / 1000)),\n            r: n\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"content-type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            t: Math.max(0, Math.round((Date.now() - r) / 1000)),\n            r: n\n          }),\n          silent: !0\n        }"
+    },
+    {
+      "line": 16876,
+      "function": "pd",
+      "routeExpression": "\"/prices/observed\"",
+      "literalRoute": "/prices/observed",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify(l)",
+      "optionsExpression": "{\n            method: \"POST\",\n            headers: {\n              \"content-type\": \"application/json\"\n            },\n            body: JSON.stringify(l),\n            silent: !0\n          }"
+    },
+    {
+      "line": 19147,
+      "function": "P0",
+      "routeExpression": "\"/api/albums\"",
+      "literalRoute": "/api/albums",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": null
+    },
+    {
+      "line": 21391,
+      "function": "Td",
+      "routeExpression": "J0",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            settings: n\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            settings: n\n          })\n        }"
+    },
+    {
+      "line": 21424,
+      "function": "(anonymous)",
+      "routeExpression": "J0",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n            cache: \"no-store\"\n          }"
+    },
+    {
+      "line": 22436,
+      "function": "Qq",
+      "routeExpression": "i",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "\"{}\"",
+      "optionsExpression": "{\n            method: \"POST\",\n            headers: {\n              \"Content-Type\": \"application/json\"\n            },\n            body: \"{}\",\n            silent: !0\n          }"
+    },
+    {
+      "line": 22443,
+      "function": "Qq",
+      "routeExpression": "i",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n            silent: !0\n          }"
+    },
+    {
+      "line": 22658,
+      "function": "iR",
+      "routeExpression": "qo(\"/api/solve-streamlined\")",
+      "literalRoute": "/api/solve-streamlined",
+      "solveBase": true,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify(v)",
+      "optionsExpression": "{\n        method: \"POST\",\n        headers: {\n          \"Content-Type\": \"application/json\"\n        },\n        body: JSON.stringify(v),\n        gzip: !0\n      }"
+    },
+    {
+      "line": 23701,
+      "function": "vp",
+      "routeExpression": "\"/sbc-config\"",
+      "literalRoute": "/sbc-config",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          cache: \"no-store\"\n        }"
+    },
+    {
+      "line": 25940,
+      "function": "FB",
+      "routeExpression": "\"/v1/votes?kind=\" + e + \"&ids=\" + r.map(encodeURIComponent).join(\n          \",\")",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          silent: !0,\n          cache: \"no-store\"\n        }"
+    },
+    {
+      "line": 25970,
+      "function": "UB",
+      "routeExpression": "\"/v1/votes\"",
+      "literalRoute": "/v1/votes",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            kind: e,\n            id: t,\n            vote: n\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            kind: e,\n            id: t,\n            vote: n\n          }),\n          silent: !0\n        }"
+    },
+    {
+      "line": 29448,
+      "function": "GD",
+      "routeExpression": "\"/prices/lookup\"",
+      "literalRoute": "/prices/lookup",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify(Object.assign({\n                resourceIds: s,\n                platform: n\n              }, n === Ve() ? EL(s) : null))",
+      "optionsExpression": "{\n              method: \"POST\",\n              headers: {\n                \"Content-Type\": \"application/json\"\n              },\n              body: JSON.stringify(Object.assign({\n                resourceIds: s,\n                platform: n\n              }, n === Ve() ? EL(s) : null))\n            }"
+    },
+    {
+      "line": 29643,
+      "function": "$D",
+      "routeExpression": "\"/v1/clubs/\" + e + \"/first-owner-answers\"",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "PUT",
+      "bodyExpression": "JSON.stringify({\n              yes: t.yes,\n              no: t.no,\n              clear: []\n            })",
+      "optionsExpression": "{\n            method: \"PUT\",\n            headers: {\n              \"Content-Type\": \"application/json\"\n            },\n            body: JSON.stringify({\n              yes: t.yes,\n              no: t.no,\n              clear: []\n            }),\n            silent: !0\n          }"
+    },
+    {
+      "line": 29713,
+      "function": "lS",
+      "routeExpression": "\"/v1/clubs/\" + e + \"/first-owned\"",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n              ids: a\n            })",
+      "optionsExpression": "{\n            method: \"POST\",\n            headers: {\n              \"Content-Type\": \"application/json\"\n            },\n            body: JSON.stringify({\n              ids: a\n            }),\n            silent: !0\n          }"
+    },
+    {
+      "line": 29781,
+      "function": "(anonymous)",
+      "routeExpression": "\"/v1/clubs/\" + e + \"/first-owned\"",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n            silent: !0\n          }"
+    },
+    {
+      "line": 29883,
+      "function": "XD",
+      "routeExpression": "\"/v1/clubs/\" + r + \"/first-owner-answers\"",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "PUT",
+      "bodyExpression": "JSON.stringify(n)",
+      "optionsExpression": "{\n          method: \"PUT\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify(n),\n          silent: !0\n        }"
+    },
+    {
+      "line": 30109,
+      "function": "ah",
+      "routeExpression": "i ? JD : QD",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify(a)",
+      "optionsExpression": "{\n            method: \"POST\",\n            headers: {\n              \"Content-Type\": \"application/json\"\n            },\n            body: JSON.stringify(a),\n            silent: !0\n          }"
+    },
+    {
+      "line": 30223,
+      "function": "mS",
+      "routeExpression": "u4",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n              resourceIds: s\n            })",
+      "optionsExpression": "{\n            method: \"POST\",\n            headers: {\n              \"Content-Type\": \"application/json\"\n            },\n            body: JSON.stringify({\n              resourceIds: s\n            })\n          }"
+    },
+    {
+      "line": 30723,
+      "function": "Sn",
+      "routeExpression": "\"/api/events\"",
+      "literalRoute": "/api/events",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            event: e,\n            surface: t || \"\",\n            variant: n || \"\"\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            event: e,\n            surface: t || \"\",\n            variant: n || \"\"\n          }),\n          silent: !0\n        }"
+    },
+    {
+      "line": 30780,
+      "function": "uh",
+      "routeExpression": "\"/v1/events\"",
+      "literalRoute": "/v1/events",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            events: t.slice(0, ES)\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            events: t.slice(0, ES)\n          }),\n          silent: !0\n        }"
+    },
+    {
+      "line": 30811,
+      "function": "T4",
+      "routeExpression": "\"/config\"",
+      "literalRoute": "/config",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          cache: \"no-cache\"\n        }"
+    },
+    {
+      "line": 30904,
+      "function": "OS",
+      "routeExpression": "\"/v1/session\"",
+      "literalRoute": "/v1/session",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          cache: \"no-store\"\n        }"
+    },
+    {
+      "line": 30909,
+      "function": "OS",
+      "routeExpression": "\"/v1/session\"",
+      "literalRoute": "/v1/session",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          cache: \"no-store\"\n        }"
+    },
+    {
+      "line": 30915,
+      "function": "OS",
+      "routeExpression": "\"/v1/session\"",
+      "literalRoute": "/v1/session",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          cache: \"no-store\"\n        }"
+    },
+    {
+      "line": 30940,
+      "function": "(anonymous)",
+      "routeExpression": "\"/v1/content/\" + l + \"/\" + encodeURIComponent(c)",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "(unresolved)",
+      "bodyExpression": null,
+      "optionsExpression": "Object\n            .assign({\n              edge: !0\n            }, t || {})"
+    },
+    {
+      "line": 31000,
+      "function": "M4",
+      "routeExpression": "\"/v1/manifest\"",
+      "literalRoute": "/v1/manifest",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          cache: \"no-cache\"\n        }"
+    },
+    {
+      "line": 31015,
+      "function": "M4",
+      "routeExpression": "\"/v1/manifest\"",
+      "literalRoute": "/v1/manifest",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          cache: \"no-store\"\n        }"
+    },
+    {
+      "line": 31031,
+      "function": "M4",
+      "routeExpression": "\"/v1/notices\"",
+      "literalRoute": "/v1/notices",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          headers: {\n            \"Accept-Language\": Lr()\n          },\n          silent: !0\n        }"
+    },
+    {
+      "line": 31450,
+      "function": "J4",
+      "routeExpression": "\"/auth/providers\"",
+      "literalRoute": "/auth/providers",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n        cache: \"no-store\"\n      }"
+    },
+    {
+      "line": 31464,
+      "function": "zS",
+      "routeExpression": "\"/auth/email/start\"",
+      "literalRoute": "/auth/email/start",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            email: t,\n            client: !0\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            email: t,\n            client: !0\n          })\n        }"
+    },
+    {
+      "line": 31490,
+      "function": "Z4",
+      "routeExpression": "\"/auth/email/verify\"",
+      "literalRoute": "/auth/email/verify",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            code: String(e || \"\"),\n            flow: t.flow\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            code: String(e || \"\"),\n            flow: t.flow\n          })\n        }"
+    },
+    {
+      "line": 31511,
+      "function": "Ch",
+      "routeExpression": "\"/auth/logout\"",
+      "literalRoute": "/auth/logout",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          method: \"POST\"\n        }"
+    },
+    {
+      "line": 31531,
+      "function": "Bt",
+      "routeExpression": "\"/me\"",
+      "literalRoute": "/me",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n        cache: \"no-store\"\n      }"
+    },
+    {
+      "line": 34635,
+      "function": "U5",
+      "routeExpression": "\"/cdn-cgi/trace\"",
+      "literalRoute": "/cdn-cgi/trace",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          edge: !0,\n          cache: \"no-store\",\n          timeoutMs: F5\n        }"
+    },
+    {
+      "line": 34833,
+      "function": "Mh",
+      "routeExpression": "\"/api/news/event\"",
+      "literalRoute": "/api/news/event",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify(n == null ? {\n            id: e,\n            event: t\n          } : {\n            id: e,\n            event: t,\n            dwellMs: n\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify(n == null ? {\n            id: e,\n            event: t\n          } : {\n            id: e,\n            event: t,\n            dwellMs: n\n          }),\n          silent: !0\n        }"
+    },
+    {
+      "line": 37438,
+      "function": "Y6",
+      "routeExpression": "qo(\"/v1/squad-builds\")",
+      "literalRoute": "/v1/squad-builds",
+      "solveBase": true,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify(Object.assign({\n          tactic: e,\n          pool: t,\n          count: r > 0 ? F6 : D6,\n          minDifferent: U6,\n          chooseManager: !0\n        }, n ? {\n          manager: n\n        } : null, s ? {\n          managers: s\n        } : null, a && a.length ? {\n          keep: a\n        } : null, {\n          engine: \"fast\"\n        }, r > 0 ? {\n          budget: r,\n          platform: Ve(),\n          ratingMin: o,\n          ratingMax: i\n        } : null, $6(Uc())))",
+      "optionsExpression": "{\n        method: \"POST\",\n        headers: {\n          \"Content-Type\": \"application/json\"\n        },\n        body: JSON.stringify(Object.assign({\n          tactic: e,\n          pool: t,\n          count: r > 0 ? F6 : D6,\n          minDifferent: U6,\n          chooseManager: !0\n        }, n ? {\n          manager: n\n        } : null, s ? {\n          managers: s\n        } : null, a && a.length ? {\n          keep: a\n        } : null, {\n          engine: \"fast\"\n        }, r > 0 ? {\n          budget: r,\n          platform: Ve(),\n          ratingMin: o,\n          ratingMax: i\n        } : null, $6(Uc()))),\n        gzip: !0\n      }"
+    },
+    {
+      "line": 39604,
+      "function": "L3",
+      "routeExpression": "\"/v1/event-squads\"",
+      "literalRoute": "/v1/event-squads",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          cache: \"no-cache\",\n          silent: !0\n        }"
+    },
+    {
+      "line": 39981,
+      "function": "BC",
+      "routeExpression": "qo(\"/v1/squad-builds\")",
+      "literalRoute": "/v1/squad-builds",
+      "solveBase": true,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify(e)",
+      "optionsExpression": "{\n        method: \"POST\",\n        headers: {\n          \"Content-Type\": \"application/json\"\n        },\n        body: JSON.stringify(e),\n        gzip: !0\n      }"
+    },
+    {
+      "line": 40854,
+      "function": "(anonymous)",
+      "routeExpression": "\"/v1/clubs/\" + e + \"/gallery-plans/\" + r",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n            silent: !0\n          }"
+    },
+    {
+      "line": 40889,
+      "function": "EU",
+      "routeExpression": "\"/v1/clubs/\" + n + \"/gallery-plans/\" + e",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "(unresolved)",
+      "bodyExpression": null,
+      "optionsExpression": "t ? {\n          method: \"PUT\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify(t),\n          silent: !0\n        } : {\n          method: \"DELETE\",\n          silent: !0\n        }"
+    },
+    {
+      "line": 40953,
+      "function": "(anonymous)",
+      "routeExpression": "\"/v1/clubs/\" + e + \"/gallery-grades\"",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n            silent: !0\n          }"
+    },
+    {
+      "line": 40990,
+      "function": "eI",
+      "routeExpression": "\"/v1/clubs/\" + r + \"/gallery-grades/\" + encodeURIComponent(e) +\n          \"/\" + encodeURIComponent(t)",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "PUT",
+      "bodyExpression": "JSON.stringify(n)",
+      "optionsExpression": "{\n            method: \"PUT\",\n            headers: {\n              \"Content-Type\": \"application/json\"\n            },\n            body: JSON.stringify(n),\n            silent: !0\n          }"
+    },
+    {
+      "line": 43468,
+      "function": "S8",
+      "routeExpression": "\"/api/gallery\"",
+      "literalRoute": "/api/gallery",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": null
+    },
+    {
+      "line": 43481,
+      "function": "Bs",
+      "routeExpression": "\"/api/gallery/all/cards\"",
+      "literalRoute": "/api/gallery/all/cards",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": null
+    },
+    {
+      "line": 43645,
+      "function": "P8",
+      "routeExpression": "\"/api/gallery/\" + encodeURIComponent(e) + \"/\" + encodeURIComponent(t\n        .slug)",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": null
+    },
+    {
+      "line": 43845,
+      "function": "M8",
+      "routeExpression": "\"/api/gallery/\" + encodeURIComponent(t.cat) + \"/\" + encodeURIComponent(e.slug)",
+      "literalRoute": null,
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n          platform: s,\n          owned: n.map((l) => ({\n            id: l.id,\n            firstOwned: !!l.firstOwned\n          }))\n        })",
+      "optionsExpression": "{\n        method: \"POST\",\n        headers: {\n          \"Content-Type\": \"application/json\"\n        },\n        silent: !0,\n        body: JSON.stringify({\n          platform: s,\n          owned: n.map((l) => ({\n            id: l.id,\n            firstOwned: !!l.firstOwned\n          }))\n        })\n      }"
+    },
+    {
+      "line": 44257,
+      "function": "ro",
+      "routeExpression": "\"/api/gallery/all/opportunities\"",
+      "literalRoute": "/api/gallery/all/opportunities",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n            platform: o,\n            owned: g\n          })",
+      "optionsExpression": "{\n          method: \"POST\",\n          headers: {\n            \"Content-Type\": \"application/json\"\n          },\n          body: JSON.stringify({\n            platform: o,\n            owned: g\n          })\n        }"
+    },
+    {
+      "line": 44789,
+      "function": "(anonymous)",
+      "routeExpression": "\"/api/gallery/all/step-scores\"",
+      "literalRoute": "/api/gallery/all/step-scores",
+      "solveBase": false,
+      "method": "POST",
+      "bodyExpression": "JSON.stringify({\n              owned: a,\n              steps: o.map((l) => ({\n                category: l.category,\n                slug: l.slug,\n                ids: l.ids\n              }))\n            })",
+      "optionsExpression": "{\n            method: \"POST\",\n            headers: {\n              \"Content-Type\": \"application/json\"\n            },\n            silent: !0,\n            body: JSON.stringify({\n              owned: a,\n              steps: o.map((l) => ({\n                category: l.category,\n                slug: l.slug,\n                ids: l.ids\n              }))\n            })\n          }"
+    },
+    {
+      "line": 46232,
+      "function": "Gj",
+      "routeExpression": "\"/ea-names.json\"",
+      "literalRoute": "/ea-names.json",
+      "solveBase": false,
+      "method": "GET",
+      "bodyExpression": null,
+      "optionsExpression": "{\n          edge: !0,\n          cache: \"no-cache\"\n        }"
+    }
+  ]
+}
