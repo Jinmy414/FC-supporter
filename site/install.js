@@ -2,6 +2,26 @@
   "use strict";
   const $ = selector => document.querySelector(selector);
   const notice = $("#dataNotice");
+  const menuToggle = $(".mobile-menu-toggle");
+  const navigation = $("#siteNavigation");
+  function closeNavigation() {
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', '打开导航菜单');
+    navigation.classList.remove('is-open');
+  }
+  menuToggle.addEventListener('click', () => {
+    const open = menuToggle.getAttribute('aria-expanded') !== 'true';
+    menuToggle.setAttribute('aria-expanded', String(open));
+    menuToggle.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
+    navigation.classList.toggle('is-open', open);
+  });
+  navigation.addEventListener('click', event => {
+    if (event.target.closest('a,button')) closeNavigation();
+  });
+  document.addEventListener('keydown', event => {if(event.key === 'Escape') closeNavigation();});
+  document.addEventListener('click', event => {
+    if (!navigation.contains(event.target) && !menuToggle.contains(event.target)) closeNavigation();
+  });
   try {
     if (localStorage.getItem("fcSupporterNotice") === "dismissed") notice.hidden = true;
   } catch (_) {}

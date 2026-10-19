@@ -30,6 +30,17 @@ jobs:
         run: npm test
       - name: Check website resources and syntax
         run: npm run check
+      - name: Install Chromium for browser acceptance
+        run: npx playwright install --with-deps chromium
+      - name: Test desktop and mobile browser flows
+        run: npm run test:browser
+      - name: Save browser screenshots and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-acceptance
+          path: artifacts/
+          retention-days: 14
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website

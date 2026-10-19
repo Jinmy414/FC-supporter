@@ -7,11 +7,13 @@
     "test": "node --test tests/*.test.cjs",
     "check": "node scripts/check.cjs",
     "package": "node scripts/package.cjs",
-    "pretest": "npm run package"
+    "pretest": "npm run package",
+    "test:browser": "playwright test"
   },
   "devDependencies": {
     "@fontsource/archivo": "^5.3.0",
     "@fontsource/geist": "^5.3.0",
+    "@playwright/test": "^1.64.1",
     "acorn": "^8.19.0",
     "acorn-walk": "^8.3.5",
     "js-beautify": "1.15.4",

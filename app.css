@@ -322,6 +322,8 @@ p {
 }
 
 .heading-stat {
+  flex-shrink: 0;
+  white-space: nowrap;
   min-width: 105px;
   display: flex;
   flex-direction: column;
@@ -769,6 +771,7 @@ p {
 
 .formation-board {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 7px;
   min-width: 0;
   padding: 15px;
@@ -779,11 +782,13 @@ p {
 
 .formation-line {
   display: flex;
+  min-width: 0;
   justify-content: center;
   gap: 6px;
 }
 
 .formation-player {
+  min-width: 0;
   width: 74px;
   min-height: 69px;
   display: flex;
@@ -1911,7 +1916,7 @@ fieldset:disabled {
   }
 
   .formation-player span {
-    max-width: 60px;
+    max-width: min(60px, calc(100% - 4px));
     font-size: 9px
   }
 
