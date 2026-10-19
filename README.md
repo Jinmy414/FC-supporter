@@ -1,6 +1,6 @@
 # FC Supporter
 
-FC 阵容规划工具与安装站点，当前为 **1.1.0-beta.1**。Chromium 页面与求解流程已加入实际浏览器测试；跨平台安装和 EA 会话验收仍待完成，尚未达到完整 Gold 功能迁移的发布标准。
+FC 阵容规划工具与安装站点，当前为 **1.1.0-beta.1**。Chromium、Firefox、WebKit 页面与求解流程已加入实际浏览器测试；跨平台安装和 EA 会话验收仍待完成，尚未达到完整 Gold 功能迁移的发布标准。
 
 - 安装首页：<https://jinmy414.github.io/FC-supporter/>
 - 网页工具：<https://jinmy414.github.io/FC-supporter/app.html>
@@ -31,13 +31,13 @@ npm ci
 npm run package
 npm test
 npm run check
-npx playwright install chromium
+npx playwright install --with-deps chromium firefox webkit
 npm run test:browser
 ```
 
 `npm test` 包含核心规则回归、DOM 交互和后台求解协议测试。DOM 测试使用 jsdom 与隔离的 Worker 协议测试环境，不等同于真实 Chrome/Firefox/Safari 验收。
 
-`npm run test:browser` 使用真实 Chromium，覆盖 1440px、390px 和 320px 宽度下的安装面板、指南、ZIP 下载及哈希、文件导入、真实 Web Worker 求解、名单持久化、挑战组回溯及阵型卡片边界。截图、失败追踪及 HTML 报告保存到 `artifacts/`。手机尺寸模拟不等于真机 Safari 或 Android 扩展安装验收。CI 会运行浏览器测试，失败时阻止部署。
+`npm run test:browser` 使用真实 Chromium、Firefox 和 Linux WebKit，覆盖 1440px、390px 和 320px 宽度下的安装面板、指南、ZIP 下载及哈希、文件导入、真实 Web Worker 求解、名单持久化、挑战组回溯及阵型卡片边界。截图、失败追踪及 HTML 报告保存到 `artifacts/`。WebKit 手机尺寸模拟不等于真机 Safari 或 Android 扩展安装验收。CI 会运行浏览器测试，失败时阻止部署；默认使用两个测试进程控制浏览器资源占用。
 
 其中 `--project=extension` 会解压实际发布 ZIP，在独立 Chromium 配置中加载扩展，从扩展管理页确认安装，再加载 `popup.html` 页面并点击入口打开扩展工具。该检查在断网状态下验证 `chrome.storage.local` 保存与刷新恢复、SBC Worker 和阵型生成，未模拟 Chrome API；不等同于手动点击浏览器工具栏、Chrome 商店上架、Edge 或 EA 会话验收。
 

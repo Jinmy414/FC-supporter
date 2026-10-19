@@ -30,8 +30,8 @@ jobs:
         run: npm test
       - name: Check website resources and syntax
         run: npm run check
-      - name: Install Chromium for browser acceptance
-        run: npx playwright install --with-deps chromium
+      - name: Install browser engines for acceptance
+        run: npx playwright install --with-deps chromium firefox webkit
       - name: Test desktop and mobile browser flows
         run: npm run test:browser
       - name: Save browser screenshots and reports
